@@ -1,0 +1,172 @@
+<% include ./partials/header %>
+
+<%
+    var     canLike = false,
+            profile_pic = "",
+            blocked = false,
+            state = false;
+    pictures.forEach(function (picture) {
+        if (picture.status === 1 && picture.author == currentUser.username) {
+            canLike = true;
+        }
+    });%>
+
+<div class="ui grid">
+    <div class="three wide column"></div>
+    <div class="ui ten wide column segment" style="background-color: #192231">
+        <div class="ui container">
+            <h2 class="ui header" style="color: #FFFFFF">Personal information</h2>
+            <div class="ui three column grid">
+                <div class="column">
+                    <div class=" top attached ui segment">
+                        <%= user.birthDate %>
+                    </div>
+                    <div class="attached ui segment">
+                        <% if (user.gender === 1){ %>
+                            Male
+                        <% } else { %>
+                            Female
+                        <% } %>
+                    </div>
+                    <div class="bottom attached ui segment">
+                        <% if (user.orientation === -1){ %>
+                            Heterosexual
+                        <% } else if (user.orientation === 1){ %>
+                            Homosexual
+                        <% } else { %>
+                            Bisexual
+                        <% } %>
+                    </div>
+                    <div class="ui segments">
+                        <div class="ui segment">
+                            <h4>Tags</h4>
+                        </div>
+                        <div class="ui list segment">
+                            <div class="ui labels">
+                                <% user.tags.forEach(function (tag) { %>
+                                <div class="ui label"><%= tag %> </div>
+                                <%}); %>
+                            </div>
+                        </div>
+                        <div class="ui segment">
+                            <span><i class="trophy orange icon"></i>Popularity : <%= user.popularity %></span>
+                        </div>
+                        <div class="ui segment">
+                            <%  if (canLike === true){
+                                likes.forEach(function (like) {
+                                    if (like.likedUser == user._id && like.likerUser == currentUser._id)
+                                        state = true;
+                                });
+                                    if (state == true) { %>
+                                        <button id="<%= currentUser._id %>" name="<%= user._id %>" value="Dislike" class="like ui inverted green red button">
+                                            <i class="heart icon"></i>Dislike</button>
+                            <%      }
+                                    else {%>
+                                        <button id="<%= currentUser._id %>" name="<%= user._id %>" value="Like" class="like ui inverted green button">
+                                            <i class="heart icon"></i>Like</button>
+                            <%      }
+                                } %>
+                        </div>
+                    </div>
+                    </div>
+                    <% pictures.forEach(function (picture) {
+                        if (picture.author === user.username && picture.status === 1){
+                                profile_pic = picture.link;
+                            }
+                        })%>
+                    <div class="column">
+                        <div class="ui centered cards">
+                            <div class="card">
+                                <div class="image rounded">
+                                    <%  if (profile_pic !== "") {%>
+                                    <img class="ui centered rounded image" src="<%= profile_pic %>">
+                                    <%  }
+                                        else{ %>
+                                            <img class="ui centered rounded image" src="/img/empty_user.png">
+                                     <% } %>
+                                </div>
+                                <div class="content">
+                                    <div class="header">
+                                        <%= user.firstName + " " + user.lastName %>
+                                    </div>
+                                    <div class="meta">
+                                        <p><%= user.location %></p>
+                                    </div>
+                                    <div class="meta">
+                                        <% if (user.logged === true) {%>
+                                            <i class="green user icon"></i><span>Connected</span>
+                                        <%  }
+                                            else { %>
+                                            <i class="red user icon"></i><span>Not connected</span>
+                                            <p>Last connection: <%= user.lastConnect %></p>
+                                        <%  } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="top attached ui item menu">
+                            <h4>Other pics</h4>
+                        </div>
+                        <div class="attached ui container">
+                            <div class="ui two column grid">
+                                <%  pictures.forEach(function (picture) {
+                                        if (picture.author === user.username && picture.status !== 1) {%>
+                                <div class="column">
+                                    <img class="ui rounded fluid image" src="<%= picture.link %>">
+                                </div>
+                                <%      }
+                                }); %>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br><br><br>
+<div class="ui grid">
+    <div class="three wide column"></div>
+    <div class="ui ten wide column segment" style="background-color: #192231">
+        <div class="ui container" style="background-color: #192231">
+            <h2 class="ui header" style="color: #FFFFFF;;">About</h2>
+
+            <h4 class="ui top attached block header">
+                Description
+            </h4>
+            <div class="ui bottom attached segment">
+                <%= user.description %>
+            </div>
+
+            <div class="ui section divider"></div>
+
+            <h2 class="ui header" style="color: #FFFFFF;">Reports</h2>
+            <h4 class="ui top attached block header">
+                Something wrong with this user ?
+            </h4>
+            <div class="ui bottom attached segment">
+                <form action="/match/block_user" method="POST">
+                    <input type="hidden" name="user_id" value="<%= user._id%>">
+                    <%  currentUser.userBlocked.forEach(function (user_blocked){
+                            if (user_blocked == user.username)
+                                blocked = true;
+                        });
+                        if (blocked === true){ %>
+                            <button name="unblock" value="<%= user.username %>" type="submit" class="ui negative basic button">Unblock this user</button>
+                     <% }
+                        else { %>
+                            <button name="block" value="<%= user.username %>" type="submit" class="ui negative basic button">Block this user</button>
+                            <button name="block" value="<%= user.username %>" type="submit" class="ui negative basic button">Report as fake</button>
+                    <%  }   %>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.1.1.js"
+        integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+        crossorigin="anonymous"></script>
+<script src="/like_script.js"></script>
+<script src="/notification_script.js"></script>
+<% include ./partials/footer %>

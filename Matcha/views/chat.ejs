@@ -1,0 +1,84 @@
+<% include ./partials/header %>
+
+<div class="ui main text container segment" style="background-color: #192231">
+    <div class="ui comments">
+        <h4 id="<%= user.username%>" class="receiver ui top block header" style="background-color: #192231; color: #FFFFFF">
+            Chatting with <%= " " + user.firstName + " " + user.lastName%>
+        </h4>
+        <%  messages.forEach(function (message) {
+                if (message.sender === user.username) {%>
+                    <div class="comment">
+                        <div class="content">
+                            <div class="ui floating compact message">
+                                <p><%=  message.message %></p>
+                            </div>
+                        </div>
+                    </div>
+        <%      }
+                else {%>
+                    <div class="comment">
+                        <div class="content">
+                            <div class="ui floating teal compact message" style="float: right;">
+                                <p><%=  message.message %></p>
+                            </div>
+                        </div>
+                    </div>
+                    <br><br><br>
+        <%      }   %>
+       <%   }); %>
+        <div id="new_message" class="comment" style="display: none;">
+            <div class="content">
+                <div id="message_style" class="ui floating teal compact message">
+                     <p id="messages"></p>
+                </div>
+            </div>
+        </div>
+        <form class="ui reply form">
+            <div class="field">
+                <textarea rows="2" id="m" name="<%= currentUser.username%>" autocomplete="off"></textarea>
+            </div>
+            <button type="submit" class="ui primary button">Send</button>
+        </form>
+    </div>
+</div>
+<script src="/notification_script.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+    var socket = io();
+    var userWritting = document.querySelector('#m');
+    var userId = document.querySelector('.user');
+    var receiverId = document.querySelector('.receiver');
+    var display = document.querySelector('#new_message');
+    var style = document.querySelector('#message_style');
+
+    $('form').submit(function(){
+        $.post(
+                '/user/chat',
+                {
+                    sender: $(userId).attr('id'),
+                    receiver: $(receiverId).attr('id'),
+                    message: $('#m').val()
+                },
+                function displayMessage() {
+                    socket.emit('chat message', $('#m').val());
+                    $('#m').val('');
+                    return false;
+                },
+                'text'
+        )
+    });
+    socket.on('chat message', function(msg){
+        $('#messages').append($('<p>').text(msg));
+        $(display).css('display', 'block');
+        if ($(userWritting).attr('name') !== $(userId).attr('id').toString()){
+            style.setAttribute('class', "ui floating teal compact message")
+        }
+        else{
+            style.setAttribute('class', "ui floating compact message")
+        }
+
+    });
+</script>
+
+<% include ./partials/footer %>

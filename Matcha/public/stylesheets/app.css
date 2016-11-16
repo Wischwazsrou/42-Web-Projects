@@ -1,0 +1,10 @@
+.body{
+    margin-top: 4.0em;
+}
+p {
+    word-wrap: break-word;
+}
+
+.search {
+    color: white;
+}

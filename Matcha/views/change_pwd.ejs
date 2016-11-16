@@ -1,0 +1,25 @@
+<% include ./partials/header %>
+
+<div class="ui main text container segment">
+    <div class="ui centered huge header">Change Password</div>
+    <form class="ui form" action="/change_pwd" method="POST">
+        <div class="field">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Username">
+        </div>
+        <div class="field">
+            <label>Code</label>
+            <input type="text" name="token" placeholder="Code">
+        </div>
+        <div class="field">
+            <label>New Password</label>
+            <input type="password" name="new_password" placeholder="New Password">
+        </div>
+        <div class="field">
+            <label>Confirm Password</label>
+            <input type="password" name="confirm_password" placeholder="Confirm Password">
+        </div>
+        <button class="ui button" type="submit">Submit</button>
+    </form>
+</div>
+<% include ./partials/footer %>

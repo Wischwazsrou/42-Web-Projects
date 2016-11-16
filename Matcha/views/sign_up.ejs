@@ -1,0 +1,75 @@
+<% include ./partials/header %>
+
+
+<% if (error.length > 0) {%>
+<div class="ui main text container">
+    <div class="ui error message">
+        <div class="header">
+            <i class="warning circle icon"></i><%= error %>
+        </div>
+        <%  if (info.length > 0){
+                var details = info.toString().split("/"); %>
+                <ul class="list">
+                    <% details.forEach(function (message) { %>
+                        <li> <%= message %></li>
+                    <%
+                    })%>
+                </ul>
+        <% }%>
+    </div>
+</div>
+<% }%>
+
+<div class="ui main text container segment" style="background-color: #192231">
+    <div class="ui centered huge header" style="color: #FFFFFF">Sign Up</div>
+    <form class="ui form" action="/sign_up" method="POST">
+        <div class="field">
+            <label style="color: #FFFFFF">Username *</label>
+            <input type="text" name="username" placeholder="Username">
+        </div>
+        <div class="field">
+            <label style="color: #FFFFFF">First Name *</label>
+            <input type="text" name="first_name" placeholder="First Name">
+        </div>
+        <div class="field">
+            <label style="color: #FFFFFF">Last Name *</label>
+            <input type="text" name="last_name" placeholder="Last Name">
+        </div>
+        <div class="field">
+            <label style="color: #FFFFFF">Birth Date *</label>
+            <input type="date" name="birth_date" placeholder="Birth Date">
+        </div>
+        <div class="field">
+            <label style="color: #FFFFFF">Email Address *</label>
+            <input type="email" name="email" placeholder="Email">
+        </div>
+        <div class="field">
+            <label style="color: #FFFFFF">Password *</label>
+            <input type="password" name="password" placeholder="Password">
+        </div>
+        <div class="field">
+            <label style="color: #FFFFFF">Confirm Password *</label>
+            <input type="password" name="confirm_password" placeholder="Password">
+        </div>
+        <div class="field">
+            <label style="color: #FFFFFF">Gender *</label>
+            <select name="gender">
+                <option value="0"></option>
+                <option value="1">Male</option>
+                <option value="-1">Female</option>
+            </select>
+        </div>
+        <div class="field">
+            <label style="color: #FFFFFF">Orientation</label>
+            <select name="orientation">
+                <option value="0"></option>
+                <option value="1">Homosexual</option>
+                <option value="-1">Heterosexual</option>
+                <option value="2">Bisexual</option>
+            </select>
+        </div>
+        <button class="ui primary button" type="submit">Submit</button>
+    </form>
+</div>
+
+<% include ./partials/footer %>

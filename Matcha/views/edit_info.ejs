@@ -1,0 +1,119 @@
+<% include ./partials/header %>
+
+<% if (error.length > 0) {%>
+<div class="ui main text container">
+    <div class="ui error message">
+        <div class="header">
+            <i class="warning circle icon"></i><%= error %>
+        </div>
+        <%  if (info.length > 0){
+            var details = info.toString().split("/"); %>
+        <ul class="list">
+            <% details.forEach(function (message) { %>
+            <li> <%= message %></li>
+            <%
+            })%>
+        </ul>
+        <% }%>
+    </div>
+</div>
+<% }%>
+
+<div class="ui main text container segment" style="background-color: #192231">
+    <div class="ui centered huge header" style="color: #FFFFFF">Edit Personal Information</div>
+    <form class="ui form" action="/user/edit_info" method="POST">
+        <div class="field">
+            <label style="color: #FFFFFF">First Name</label>
+            <input type="text" name="first_name" value="<%= currentUser.firstName %>">
+        </div>
+        <div class="field">
+            <label style="color: #FFFFFF">Last Name</label>
+            <input type="text" name="last_name" value="<%= currentUser.lastName %>">
+        </div>
+        <div class="field">
+            <label style="color: #FFFFFF">Birth Date</label>
+            <input type="date" name="birth_date" value="<%= currentUser.birthDate %>">
+        </div>
+        <div class="field">
+            <label style="color: #FFFFFF">Gender</label>
+            <%  if (currentUser.gender == -1) {%>
+                <select name="gender">
+                    <option value="1">Male</option>
+                    <option value="-1" selected>Female</option>
+                </select>
+            <%  }
+                else { %>
+                <select name="gender">
+                    <option value="1" selected>Male</option>
+                    <option value="-1">Female</option>
+                </select>
+            <%  } %>
+        </div>
+        <div class="field">
+            <label style="color: #FFFFFF">Orientation</label>
+            <%  if (currentUser.orientation == -1) {%>
+                <select name="orientation">
+                    <option value="-1" selected>Heterosexual</option>
+                    <option value="1">Homosexual</option>
+                    <option value="2">Bisexual</option>
+                </select>
+            <%  }
+                else if (currentUser.orientation == 1) { %>
+                <select name="orientation">
+                    <option value="-1">Heterosexual</option>
+                    <option value="-1" selected>Homosexual</option>
+                    <option value="2">Bisexual</option>
+                </select>
+            <%  }
+                else { %>
+                <select name="orientation">
+                    <option value="-1">Heterosexual</option>
+                    <option value="1">Homosexual</option>
+                    <option value="2" selected>Bisexual</option>
+                </select>
+            <%  } %>
+        </div>
+        <div class="field">
+            <label style="color: #FFFFFF">Email Address</label>
+            <input type="email" name="email" value="<%= currentUser.email %>">
+        </div>
+        <div id="location" class="field">
+            <label style="color: #FFFFFF">Location (*)</label>
+            <%
+            if (currentUser.permission === "true") { %>
+                <input type="text" name="location" value="<%= currentUser.location %>">
+            <% } else { %>
+                <input type="text" name="location" value="">
+            <% } %>
+        </div>
+        <div id="city" class="field">
+            <label style="color: #FFFFFF">City</label>
+            <input type="text" name="city" value="<%= currentUser.city %>">
+        </div>
+        <button class="ui primary button" type="submit">Submit</button>
+        <p style="color: #FFFFFF">* Your full address won't be seen by the other users but it help us to find you better matches. Only your city will be public.</p>
+    </form>
+</div>
+<br>
+<div class="ui main text container segment" style="background-color: #192231">
+    <div class="ui centered huge header" style="color: #FFFFFF">Change password</div>
+        <form class="ui form" action="/user/edit_pwd" method="POST">
+            <div class="field">
+                <label style="color: #FFFFFF">Current password</label>
+                <input type="password" name="current_password" placeholder="Password">
+            </div>
+            <div class="field">
+                <label style="color: #FFFFFF">New password</label>
+                <input type="password" name="new_password" placeholder="Password">
+            </div>
+            <div class="field">
+                <label style="color: #FFFFFF">Confirm password</label>
+                <input type="password" name="confirm_password" placeholder="Password">
+            </div>
+            <button class="ui primary button" type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+
+<% include ./partials/footer %>

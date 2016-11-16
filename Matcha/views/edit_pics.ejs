@@ -1,0 +1,101 @@
+<% include ./partials/header %>
+
+<% if (success.length > 0) {%>
+<div class="ui main text container">
+    <div class="ui success message">
+        <div class="header">
+            <i class="checkmark icon"></i><%= success %>
+        </div>
+        <%  if (info.length > 0){
+            var details = info.toString().split("/"); %>
+        <ul class="list">
+            <% details.forEach(function (message) { %>
+            <li> <%= message %></li>
+            <%
+            })%>
+        </ul>
+        <% }%>
+    </div>
+</div>
+<% }%>
+
+<% if (error.length > 0) {%>
+<div class="ui main text container">
+    <div class="ui error message">
+        <div class="header">
+            <i class="warning circle icon"></i><%= error %>
+        </div>
+        <%  if (info.length > 0){
+            var details = info.toString().split("/"); %>
+        <ul class="list">
+            <% details.forEach(function (message) { %>
+            <li> <%= message %></li>
+            <%
+            })%>
+        </ul>
+        <% }%>
+    </div>
+</div>
+<% }%>
+
+<%  var profile_pic = "";
+    pictures.forEach(function (pic) {
+        if (pic.status === 1)
+            profile_pic = pic.link;
+    }); %>
+    <div class="ui centered cards">
+        <div class="card">
+            <div class="image rounded">
+                <% if (profile_pic !== ""){ %>
+                    <img class="ui centered rounded image" src="<%= profile_pic %>">
+                <%  }
+                    else { %>
+                    <img class="ui centered rounded image" src="/img/empty_user.png">
+                <%  }   %>
+            </div>
+        </div>
+    </div>
+<div class="ui grid">
+    <div class="ui two wide column"></div>
+    <div class="ui twelve wide column">
+        <div class="ui four column doubling grid">
+            <div class="row">
+                <%  pictures.forEach( function (pic){
+                if (pic.status === 0) { %>
+                <div class="column">
+                    <div class="ui centered cards">
+                        <div class="card">
+                            <div class="image rounded">
+                                <img class="ui centered medium image" src="<%= pic.link %>">
+                            </div>
+                            <div class="content">
+                                <div class="centered header">
+                                    <form action="/user/profile_pic" method="POST">
+                                        <input type="hidden" name="new_profile_pic" value="<%= pic._id %>">
+                                        <button type="submit" class="ui inverted blue button">Set as profile pic</button>
+                                    </form>
+                                    <br>
+                                    <form action="/user/remove_pic" method="POST">
+                                        <input type="hidden" name="deleted_pic" value="<%= pic._id %>">
+                                        <button type="submit" class="ui inverted red button">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <%  }
+                });%>
+            </div>
+        </div>
+    </div>
+    <div class="ui two wide column"></div>
+</div>
+
+<form action="/user/upload_pics" method="POST" enctype="multipart/form-data">
+    <input type="file" name="displayImage">
+    <button type="submit">send</button>
+</form>
+<script src="/notification_script.js"></script>
+
+<% include ./partials/footer %>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Matcha</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/semantic.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/app.css">
+    </head>
+    <body style="background-image: url(/img/background.jpg)">
+    <div class="ui grid">
+        <div class="computer tablet only row">
+            <div class="ui fixed inverted navbar menu" style="background-color: #192231;">
+                    <div class="ui container">
+                        <a href="/" class="header item"><i class="heartbeat large icon"></i>Matcha</a>
+                        <a href="/match" class="item">See match</a>
+                    </div>
+                    <% if (!currentUser){ %>
+                        <a href="/sign_in" class="item">Sign In</a>
+                        <a href="/sign_up" class="item">Sign Up</a>
+                    <% }
+                    else{ %>
+                        <a href="/user/notifications" id="notifications" class="item"><i class="flag icon"></i></a>
+                        <a href="/user/chat" id="chat" class="item">Chat Room<i class="talk icon"></i></a>
+                        <a href="/user" id="<%= currentUser.username %>" class="user item"><%= currentUser.firstName %></a>
+                        <a href="/logout" class="item">Sign Out</a>
+                    <% } %>
+            </div>
+        </div>
+        <div class="mobile only row">
+            <div class="ui fixed inverted navbar menu" style="background-color: #192231;">
+                <a href="/" class="header item"><i class="heartbeat large icon"></i>Matcha</a>
+                <div class="right menu open">
+                    <a href="" class="menu item">
+                        <i class="content icon"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ui vertical navbar menu" style="display: none; margin-top: 3em">
+                <a href="/match" class="item">See match</a>
+                <% if (!currentUser){ %>
+                <a href="/sign_in" class="item">Sign In</a>
+                <a href="/sign_up" class="item">Sign Up</a>
+                <% }  else{ %>
+                <a href="/user/notifications" class="item">Notifications</a>
+                <a href="/user/chat" class="item">Chat room</a>
+                <a href="/user" class="item"><%= currentUser.firstName %></a>
+                <a href="/logout" class="item">Sign Out</a>
+                    <% } %>
+            </div>
+        </div>
+    </div>
+        <section class="body">

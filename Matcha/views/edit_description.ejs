@@ -1,0 +1,19 @@
+<% include ./partials/header %>
+
+<div class="ui main text container segment" style="background-color: #192231">
+    <div class="ui centered huge header" style="color: #FFFFFF">Tell more about you</div>
+    <div class="ui form">
+        <div class="field">
+            <form action="/user/edit_description" method="POST">
+                <textarea name="description">
+                    <%= currentUser.description %>
+                </textarea>
+                <p></p>
+                <button class="ui primary button" type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="/notification_script.js"></script>
+
+<% include ./partials/footer %>

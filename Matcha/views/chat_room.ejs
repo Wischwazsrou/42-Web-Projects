@@ -1,0 +1,52 @@
+<% include ./partials/header %>
+
+<div class="ui main text container">
+    <div class="ui aligned divided list">
+        <% chatters.forEach(function (chatter) {
+            var blocked = false;
+            currentUser.userBlocked.forEach(function (user_blocked) {
+                if (user_blocked == chatter)
+                    blocked = true;
+            });
+            if (!blocked){
+                var new_message = false; %>
+                <div class="ui item segment" style="background-color: #192231">
+                <%  pictures.forEach(function (picture) {
+                if (chatter == picture.author && picture.status === 1){ %>
+                <img class="ui tiny rounded image" src="<%= picture.link %>">
+                <%      }
+                })  %>
+                <div class="content">
+                    <%  users.forEach(function (user) {
+                            if (user.username == chatter) { %>
+                                <a href="/match/<%= user._id %>" class="header"><%= user.firstName + " " + user.lastName%></a>
+                            <br>
+                            <%  messages.forEach(function (message) {
+                                    if (message.state === 1 && message.sender === user.username){
+                                          new_message = true;
+                                  }
+                                })
+                                if (new_message === true) {%>
+                                    <div style="color: #FF0000;">New Message !</div>
+                            <%  } %>
+                            <a href="/user/chat/<%= user._id.toString()%>">
+                                <button class="ui right labeled primary icon small button">
+                                    <i class="right arrow icon"></i>
+                                    Chatting
+                                </button>
+                            </a>
+                        <%   }
+                        })  %>
+                </div>
+            </div>
+        <% }
+        })%>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.1.1.js"
+        integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+        crossorigin="anonymous"></script>
+<script src="/like_script.js"></script>
+<script src="/notification_script.js"></script>
+
+<% include ./partials/footer %>

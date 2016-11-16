@@ -1,0 +1,147 @@
+<% include ./partials/header %>
+
+<%
+    var canLike = false;
+    pictures.forEach(function (picture) {
+        if (picture.status === 1 && picture.author === currentUser.username) {
+            canLike = true;
+        }
+    });%>
+<div class="ui grid">
+    <div class="one wide column"></div>
+    <div class="ui two wide column segment" style="background-color: #192231;">
+        <form class="ui form" action="/match/sort" method="POST">
+            <div class="field">
+                <label style="color: #FFFFFF;">Sort By : </label>
+                <select name="sort">
+                    <option value="<%= req.session.sortBy %>" selected><%= req.session.sortBy %></option>
+                    <option value="Age">Age</option>
+                    <option value="Location">Location</option>
+                    <option value="Tags">Tags</option>
+                    <option value="Popularity">Popularity</option>
+                    <option value="None">None</option>
+                </select>
+            </div>
+            <div class="field">
+                <label style="color: #FFFFFF;">Filter : </label>
+                <li class="search"><p>Interval age : </p></li>
+                    <input type="number" name="filter_min_age" min="0" max="99" value="<%= req.session.intervalAgeMin %>" placeholder="Min">
+                    <input type="number" name="filter_max_age" min="0" max="99" value="<%= req.session.intervalAgeMax %>" placeholder="Max">
+                <p></p>
+                <li class="search"><p>Interval popularity : </p></li>
+                    <input type="number" name="filter_min_popularity" min="0" value="<%= req.session.intervalPopMin %>" max="1000" placeholder="Min">
+                    <input type="number" name="filter_max_popularity" min="0" value="<%= req.session.intervalPopMax %>" max="1000" placeholder="Max">
+                <p></p>
+                <li class="search"><p>Location : </p></li>
+                    <input type="text" name="filter_location" value="<%= req.session.city %>" placeholder="City">
+                <p></p>
+                <li class="search"><p>Tags : </p></li>
+                    <input type="text" name="filter_tags" value="<%= req.session.tags %>" placeholder="Tags">
+            </div>
+            <button type="submit" class="ui fluid button primary">Search</button>
+        </form>
+    </div>
+    <div class="one wide column"></div>
+        <div class="ui ten wide column segment" style="background-color: #192231;">
+            <div class="ui five column doubling grid">
+                <div class="row">
+<%  array.forEach(function (item) {
+        users.forEach(function (user) {
+            if (user._id.toString() === item.user){
+            var index = currentUser.userBlocked.indexOf(user.username);
+                if (index === -1){
+                    var state = false;
+                    var profile_pic = ""; %>
+                            <div class="column">
+                                <div class="ui one centered link cards">
+                                    <div class="card">
+                                        <div class="image rounded">
+                                            <%  pictures.forEach(function (picture) {
+                                                    if (picture.status === 1 && picture.author === user.username) {
+                                                        profile_pic = picture.link;
+                                                    }
+                                                });
+                                                if (profile_pic !== ""){ %>
+                                                    <img class="ui centered rounded image" src="<%= profile_pic %>"  >
+                                        <%      }
+                                                else { %>
+                                                    <img class="ui centered rounded image" src="/img/empty_user.png">
+                                        <%      } %>
+                                        </div>
+                                        <div class="content">
+                                            <div class="header">
+                                                <p><%= user.firstName + " " + user.lastName %></p>
+                                            </div>
+                                            <div class="meta">
+                                                <p><%= user.city %></p>
+                                            </div>
+                                            <div class="meta">
+                                                <%= Math.abs(new Date().getFullYear() - new Date(user.birthDate).getFullYear()) + " "%>years
+                                            </div>
+                                            <span><i class="trophy orange icon"></i><%= user.popularity%></span>
+                                        </div>
+                                        <div class="ui centered header">
+                                            <a href="/match/<%= user._id %>" class="ui fluid  blue button">See profile</a>
+                                            <%  if (canLike === true){
+                                                likes.forEach(function (like) {
+                                                    if (like.likedUser == user._id && like.likerUser == currentUser._id)
+                                                        state = true;
+                                                });
+                                            if (state == true) { %>
+                                            <button id="<%= currentUser._id %>" name="<%= user._id %>" value="Dislike" class="like ui fluid green red button">
+                                                <i class="heart icon"></i>Dislike</button>
+                                            <%      }
+                                            else {%>
+                                            <button id="<%= currentUser._id %>" name="<%= user._id %>" value="Like" class="like ui fluid green button">
+                                                <i class="heart icon"></i>Like</button>
+                                            <%      }
+                                            } %>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br><br>
+                            </div>
+
+<%
+                }
+            }
+        });
+    });%>
+                </div>
+            </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.1.1.js"
+        integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+        crossorigin="anonymous"></script>
+<script src="/like_script.js"></script>
+<script src="/notification_script.js"></script>
+<script>
+    function geolocate(){
+        $.post(
+                '/user/geolocate',
+                {
+                    permission: true
+                },
+                function displayNotification() {
+                },
+                'text'
+        )
+    }
+
+    function errorhandling(error){
+        $.post(
+                '/user/geolocate',
+                {
+                    permission: false
+                },
+                function displayNotification() {
+                },
+                'text'
+        )
+    }
+
+    if(navigator.geolocation)
+        navigator.geolocation.getCurrentPosition(geolocate, errorhandling);
+</script>
+<% include ./partials/footer %>

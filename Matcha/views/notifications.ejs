@@ -1,0 +1,39 @@
+<% include ./partials/header %>
+
+<div class="ui main text container">
+    <div class="ui aligned divided list">
+    <% notifications.forEach(function (notification) {
+            if (notification.message != "new message"){
+                var profile_pic = "";%>
+        <div class="ui item segment" style="background-color: #192231">
+            <%  pictures.forEach(function (picture) {
+                    if (notification.sender == picture.author && picture.status === 1) {
+                        profile_pic = picture.link
+                    }
+                });
+                if (profile_pic != "") {%>
+                        <img class="ui tiny rounded image" src="<%= profile_pic %>">
+            <%      }
+                    else { %>
+                        <img class="ui tiny rounded image" src="/img/empty_user.png">
+            <%      } %>
+            <div class="content">
+            <%  users.forEach(function (user) {
+                    if (user.username == notification.sender) { %>
+                        <a href="/match/<%= user._id %>" class="header"><%= user.firstName + " " + user.lastName%></a>
+            <%      }
+                })  %>
+                <div class="description" style="color: #FFFFFF"><%= notification.message %></div>
+            </div>
+        </div>
+    <%      }
+        })%>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.1.1.js"
+        integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+        crossorigin="anonymous"></script>
+<script src="/like_script.js"></script>
+<script src="/notification_script.js"></script>
+
+<% include ./partials/footer %>

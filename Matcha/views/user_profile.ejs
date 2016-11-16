@@ -1,0 +1,200 @@
+<% include ./partials/header %>
+
+<% if (success.length > 0) {%>
+<div class="ui main text container">
+    <div class="ui success message">
+        <div class="header">
+            <i class="checkmark icon"></i><%= success %>
+        </div>
+        <%  if (info.length > 0){
+            var details = info.toString().split("/"); %>
+        <ul class="list">
+            <% details.forEach(function (message) { %>
+            <li> <%= message %></li>
+            <%
+            })%>
+        </ul>
+        <% }%>
+    </div>
+</div>
+<% }%>
+
+<% var profile_pic = ""; %>
+<div class="ui grid">
+    <div class="three wide column"></div>
+    <div class="ui ten wide column segment" style="background-color: #192231">
+    <div class="ui container">
+        <h2 class="ui header" style="color: #FFFFFF">Personal information<a href="/user/edit_info"><i class="edit icon"></i></a></h2>
+        <div class="ui three column grid">
+            <div class="column">
+                <div class="top attached ui segment">
+                    <p><%= currentUser.email %></p>
+                </div>
+                <div class="attached ui segment">
+                    <%= currentUser.birthDate %>
+                </div>
+                <div class="attached ui segment">
+                    <% if (currentUser.gender === 1){ %>
+                        Male
+                    <% } else { %>
+                        Female
+                    <% } %>
+                </div>
+                <div class="bottom attached ui segment">
+                    <% if (currentUser.orientation === -1){ %>
+                        Heterosexual
+                    <% } else if (currentUser.orientation === 1){ %>
+                        Homosexual
+                    <% } else { %>
+                        Bisexual
+                    <% } %>
+                </div>
+                <div class="ui segments">
+                    <div class="ui segment" style="background-color: #f3f4f5">
+                        <h4>Tags<a onclick="add_tag()"><i class="edit icon"></i></a></h4>
+                    </div>
+                    <div class="ui list segment">
+                        <div class="ui labels">
+                            <% currentUser.tags.forEach(function (tag) { %>
+                            <div id="tags" name="<%= tag %>" class="ui label">
+                                <a onClick="remove_tag();"><i class="remove icon"></i></a>
+                                <%= tag %>
+                            </div>
+                            <%}); %>
+                        </div>
+                        <form action="/user/edit_tags" method="POST">
+                            <input id="tag" type="hidden" name="new_tag">
+                        </form>
+                    </div>
+                    <div class="ui segment">
+                        <span><i class="trophy orange icon"></i>Popularity : <%= currentUser.popularity%></span>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="ui centered cards">
+                    <div class="card">
+                        <div class="image rounded">
+                            <%  pictures.forEach(function (picture) {
+                                if (picture.status === 1 && picture.author === currentUser.username) {
+                                    profile_pic = picture.link;
+                                }
+                            });
+                                if (profile_pic !== "") { %>
+                                    <img src="<%= profile_pic %>">
+                           <%   }
+                                else { %>
+                                    <img class="ui centered rounded image" src="/img/empty_user.png">
+                         <%  } %>
+                        </div>
+                        <div class="content">
+                            <div class=".user centered header">
+                                <%= currentUser.firstName + " " + currentUser.lastName %>
+                            </div>
+                            <div class="">
+                                <span><%= currentUser.city %></span><a href="/user/edit_info#location"><i class="edit icon"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column container">
+                <div class="top attached ui item menu" style="background-color: #f3f4f5">
+                    <h4>Other pics<a href="/user/edit_pics"><i class="edit icon"></i></a></h4>
+                </div>
+                <div class="attached ui container">
+                    <div class="ui two column doubling grid">
+                    <%  pictures.forEach(function (picture) {
+                            if (picture.status !== 1 && picture.author === currentUser.username) {%>
+                                <div class="column">
+                                    <img class="ui rounded fluid image" src="<%= picture.link %>">
+                                </div>
+                    <%      }
+                        }); %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+<br><br><br>
+<div class="ui grid">
+    <div class="three wide column"></div>
+    <div class="ui ten wide column segment" style="background-color: #192231">
+        <div class="ui container" style="background-color: #192231">
+            <h2 class="ui header" style="color: #FFFFFF;;">About</h2>
+
+            <h4 class="ui top attached block header">
+                Description
+                <a href="/user/edit_description"><i class="edit icon"></i></a>
+            </h4>
+            <div class="ui bottom attached segment">
+                <%= currentUser.description %>
+            </div>
+
+            <div class="ui section divider"></div>
+
+            <h4 class="ui top attached block header">
+                Connected with
+            </h4>
+            <h4 class="ui grid segment bottom attached">
+                    <div class="ui twelve wide column">
+                        <div class="ui four column doubling grid">
+                            <div class="row">
+                <%  liked.forEach(function (liked_user) {
+                        liker.forEach(function (liker_user) {
+                            if (liked_user.likerUser == liker_user.likedUser) {
+                                users.forEach(function (user){
+                                    if (user._id == liked_user.likerUser){
+                                        var blocked = false
+                                        currentUser.userBlocked.forEach(function (user_blocked){
+                                            if (user_blocked === user.username)
+                                                blocked = true;
+                                        });
+                                        if (!blocked){%>
+                                        <div class="column">
+                                            <div class="ui cards">
+                                                <div class="card">
+                                                    <a href="/match/<%= user._id %>" class="image rounded">
+                                                    <%  pictures.forEach(function (picture) {
+                                                            if (picture.status === 1 && picture.author === user.username) { %>
+                                                                <img src="<%= picture.link %>">
+                                                    <%      }
+                                                        });%>
+                                                    </a>
+                                                    <div class="content">
+                                                        <div class="header">
+                                                            <%= user.firstName + " " + user.lastName %>
+                                                        </div>
+                                                        <div class="meta">
+                                                            <a href="/user/chat/<%= user._id%>" class="ui tiny primary button">Chat</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                <%
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }); %>
+
+                        </div>
+                    </div>
+                </div>
+            </h4>
+        </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.1.1.js"
+        integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+        crossorigin="anonymous"></script>
+<script src="/edit_tags.js"></script>
+<script src="/notification_script.js"></script>
+
+<% include ./partials/footer %>

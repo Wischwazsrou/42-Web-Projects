@@ -1,0 +1,64 @@
+<% include ./partials/header %>
+
+<% if (error.length > 0) {%>
+<div class="ui main text container">
+    <div class="ui negative message">
+        <div class="header">
+            <i class="warning circle icon"></i><%= error %>
+        </div>
+        <% if (info.length > 0){%>
+            <ul class="list">
+                <li> <%= info %></li>
+            </ul>
+        <% }%>
+    </div>
+</div>
+<% }%>
+
+<% if (success.length > 0) {%>
+<div class="ui main text container">
+    <div class="ui success message">
+        <div class="header">
+            <i class="checkmark icon"></i><%= success %>
+        </div>
+        <%  if (info.length > 0){
+            var details = info.toString().split("/"); %>
+        <ul class="list">
+            <% details.forEach(function (message) { %>
+            <li> <%= message %></li>
+            <%
+            })%>
+        </ul>
+        <% }%>
+    </div>
+</div>
+<% }%>
+
+<div class="ui main text container segment" style="background-color: #192231">
+    <div class="ui centered huge header" style="color: #FFFFFF">Sign In</div>
+    <form class="ui form" action="/sign_in" method="POST">
+        <div class="field">
+            <label style="color: #FFFFFF">Username</label>
+            <input type="text" name="username" placeholder="Username">
+        </div>
+        <div class="field">
+            <label style="color: #FFFFFF">Password</label>
+            <input type="password" name="password" placeholder="Password">
+        </div>
+        <button class="ui primary button" type="submit">Submit</button>
+    </form>
+</div>
+
+<br><br><br><br>
+<div class="ui main text container segment" style="background-color: #192231">
+    <div class="ui centered huge header" style="color: #FFFFFF;">Forgot your password ?</div>
+    <form class="ui form" action="/forgot_pwd" method="POST">
+        <div class="field">
+            <label style="color: #FFFFFF">Username</label>
+            <input type="text" name="username" placeholder="Username">
+        </div>
+        <button class="ui primary button" type="submit">Send</button>
+    </form>
+</div>
+
+<% include ./partials/footer %>
