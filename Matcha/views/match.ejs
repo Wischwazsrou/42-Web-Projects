@@ -111,37 +111,7 @@
             </div>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.1.1.js"
-        integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
-        crossorigin="anonymous"></script>
 <script src="/like_script.js"></script>
 <script src="/notification_script.js"></script>
-<script>
-    function geolocate(){
-        $.post(
-                '/user/geolocate',
-                {
-                    permission: true
-                },
-                function displayNotification() {
-                },
-                'text'
-        )
-    }
-
-    function errorhandling(error){
-        $.post(
-                '/user/geolocate',
-                {
-                    permission: false
-                },
-                function displayNotification() {
-                },
-                'text'
-        )
-    }
-
-    if(navigator.geolocation)
-        navigator.geolocation.getCurrentPosition(geolocate, errorhandling);
-</script>
+<script src="/geoloc_script.js"></script>
 <% include ./partials/footer %>
