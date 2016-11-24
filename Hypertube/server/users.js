@@ -3,22 +3,31 @@ var express     = require("express"),
     users       = require("../models/users_model"),
     mongoose    = require("mongoose"),
     validator   = require("validator"),
-    hash        = require("nodejs-hash-performance");
+    hash        = require("nodejs-hash-performance"),
+    multer      = require("multer");
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './public/img')
+    },
+    filename: function (req, file, cb) {
+        cb(null, req.user.username + "." + file.originalname.split(".")[1]);
+    }
+});
+var upload = multer({ storage: storage });
 
 app.get("/", isLoggedIn, function (req, res) {
-    res.render("library");
+    users.getAlluser(function (err, users) {
+        res.render("allUsers", {users: users});
+    });
 });
 
 app.get("/:id", isLoggedIn, function (req, res) {
     if (req.params.id.length == 12 || req.params.id.length == 24) {
         var id = mongoose.Types.ObjectId(req.params.id);
         users.getSingleUserById(id, function (err, user) {
-            if (user) {
-                if (user._id.toString() !== req.user._id.toString())
-                    res.render("usersProfile");
-                else
-                    res.render("currentUserProfile");
-            }
+            if (user)
+                res.render("userProfile", {user: user});
             else
                 res.render("home");
         });
@@ -38,7 +47,7 @@ app.get("/:id/edit_profile", isLoggedIn, function (req, res) {
                     res.render("home");
                 }
                 else {
-                    res.render("edit_profile");
+                    res.render("editProfile", {user: user});
                 }
             }
             else
@@ -51,8 +60,6 @@ app.get("/:id/edit_profile", isLoggedIn, function (req, res) {
 });
 
 app.post("/change_email", isLoggedIn, function (req, res) {
-    console.log(req.user.username);
-    console.log("=========");
     if (validator.isEmail(req.body.email) ===  true){
         users.getSingleUserByEmail(req.body.email, function (err, user) {
             if (!err){
@@ -122,6 +129,21 @@ app.post("/change_about", isLoggedIn, function (req, res) {
         req.flash("success", "Your information has been updated.");
         res.redirect("/users/" + req.user._id.toString());
     })
+});
+
+app.post("/change_pic", isLoggedIn, upload.single("displayImage"), function (req, res) {
+    var format = req.file.filename.split(".")[1];
+
+    if (format !== "png" && format !== "jpg" && format !== "jpeg"){
+        req.flash("error", "Error:");
+        req.flash("info", "Wrong type of file.");
+        res.redirect("/users/" + req.user._id.toString() + "/edit_profile");
+    }
+    else{
+        users.updatePic(req.user.username, "/img/" + req.file.filename);
+        req.flash("success", "Your profile picture has been updated.");
+        res.redirect("/users/" + req.user._id.toString());
+    }
 });
 
 function  isLoggedIn(req, res, next) {

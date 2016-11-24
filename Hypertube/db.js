@@ -4,12 +4,35 @@ var mongoose    = require("mongoose"),
 
 var users = [
     {
-        username: "admin",
-        password: hash("root", "whirlpool", "base64"),
+        username: "Pam",
+        password: hash("pam123", "whirlpool", "base64"),
         email: "docjr0605@hotmail.com",
         about: "What is love ?!",
+        picture: "/img/Pam.jpg",
         favoriteMovies: ["Inception", "Django Unchained"],
-        registerDate: new Date
+        registerDate: new Date,
+        token: ""
+    },
+    {
+        username: "Jim",
+        password: hash("jim123", "whirlpool", "base64"),
+        email: "jim@hotmail.com",
+        about: "Baby don'thurt me...",
+        picture: "/img/Jim.jpg",
+        favoriteMovies: ["Interstellar", "Deadpool"],
+        registerDate: new Date,
+        token: ""
+
+    },
+    {
+        username: "Dwight",
+        password: hash("dwight123", "whirlpool", "base64"),
+        email: "dwight@hotmail.com",
+        about: "NO MORE !",
+        picture: "/img/Dwight.jpg",
+        favoriteMovies: ["Hooligans"],
+        registerDate: new Date,
+        token: ""
     }
 ];
 

@@ -79,3 +79,21 @@ form{
 .yellow{
     color: #EAC67A;
 }
+
+#profilePic{
+    max-height: 250px;
+    max-width: 250px;
+}
+
+#allUsersCards{
+    display: inline-block;
+    border-radius: 5px;
+    width: 150px;
+    height: 150px;
+    background-color: #18121E;
+}
+
+#allUsersPic{
+    max-height: 120px;
+    max-width: 120px;
+}

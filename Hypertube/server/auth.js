@@ -1,8 +1,11 @@
-var express     = require("express"),
-    app         = express(),
-    passport    = require("passport"),
-    validator   = require("validator"),
-    users       = require("../models/users_model");
+var express         = require("express"),
+    app             = express(),
+    passport        = require("passport"),
+    validator       = require("validator"),
+    nodemailer      = require("nodemailer"),
+    smtpTransport   = require('nodemailer-smtp-transport'),
+    randomstring    = require("randomstring"),
+    users           = require("../models/users_model");
 
 app.get("/", function (req, res) {
     res.render("home");
@@ -18,6 +21,13 @@ app.get("/signout", isLoggedIn, function(req, res){
     res.redirect("/");
 });
 
+app.get("/forgot_pwd", function (req, res) {
+   res.render("forgotPwd");
+});
+
+app.get("/change_pwd", function (req, res) {
+   res.render("changePwd");
+});
 
 app.get("/error", function (req, res) {
     req.flash("error", "Error: Wrong username or password.");
@@ -82,6 +92,97 @@ app.post("/signup", function (req, res) {
         req.flash("info", message);
         return res.redirect("/signup");
     }
+});
+
+app.post("/forgot_pwd", function (req, res) {
+    if(validator.isAlphanumeric(req.body.username) === true) {
+        users.getSingleUserByUsername(req.body.username, function (err, user) {
+            if (!user) {
+                req.flash("error", "Error:");
+                req.flash("info", "This username doesn't exist");
+                res.redirect("/forgot_pwd");
+            }
+            else {
+                var token = randomstring.generate(8);
+                users.updateToken(user.username, token);
+                var options = {
+                    service: 'outlook',
+                    auth: {
+                        user: "pepey33@hotmail.fr",
+                        pass: "Matcha9614*"
+                    }
+                };
+
+                var transport = nodemailer.createTransport(smtpTransport(options));
+
+                console.log('SMTP Configured');
+
+                var mailOptions = {
+                    from: '"Admin" <pepey33@hotmail.fr>',
+                    to: user.email,
+                    subject: 'Reset Password',
+                    text: '',
+                    html: '<p>Hi ' + user.username + ' ! You asked for a reset of your password. Click on the link below ' +
+                    'and insert this code <strong>' + token + '</strong> to get a new one</p>' +
+                    '<a href="http://localhost:3000/change_pwd">Link</a>'
+                };
+
+                console.log('Sending Mail');
+
+                transport.sendMail(mailOptions, function(error, info){
+                    if(error){
+                        return console.log(error);
+                    }
+                    console.log('Message sent successfully!');
+                    console.log('Message sent: ' + info.response);
+                });
+                req.flash("success", "An email has been send.");
+                res.redirect("/");
+            }
+        })
+    }
+    else{
+        req.flash("error", "Error:");
+        req.flash("info", "This username doesn't exist");
+        res.redirect("/forgot_pwd");
+    }
+});
+
+app.post("/change_pwd", function (req, res) {
+    users.getSingleUserByUsername(req.body.username, function (err, user) {
+        if (user){
+            if (req.body.new_password.match(/^[a-zA-Z0-9?@.*;:!_-]{8,18}$/) !== null) {
+                if (req.body.new_password === req.body.confirm_password) {
+                    if (req.body.code === user.token) {
+                        users.updatePassword(user.username, req.body.new_password);
+                        users.updateToken(user.username, "");
+                        req.flash("success", "Your password has been changed. You can now sign in.");
+                        res.redirect("/");
+                    }
+                    else{
+                        req.flash("error", "Error:");
+                        req.flash("info", "Invalid code");
+                        res.redirect("/change_pwd");
+                    }
+                }
+                else{
+                    req.flash("error", "Error:");
+                    req.flash("info", "New password and confirm password are not the same.");
+                    res.redirect("/change_pwd");
+                }
+            }
+            else{
+                req.flash("error", "Error:");
+                req.flash("info", "Invalid new password. Must contain between 8 and 18 characters. You also can only use the following special characters [?@.*;:!_-]");
+                res.redirect("/change_pwd");
+            }
+        }
+        else{
+            req.flash("error", "Error:");
+            req.flash("info", "Invalid username");
+            res.redirect("/change_pwd");
+        }
+    });
 });
 
 function  isLoggedIn(req, res, next) {

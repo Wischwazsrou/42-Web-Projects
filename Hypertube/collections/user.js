@@ -6,8 +6,10 @@ var UserSchema = new mongoose.Schema({
     password: String,
     email: String,
     about: String,
+    picture: String,
     favoriteMovies: Array,
-    registerDate: Date
+    registerDate: Date,
+    token: String
 });
 
 UserSchema.plugin(passportLocalMongoose);

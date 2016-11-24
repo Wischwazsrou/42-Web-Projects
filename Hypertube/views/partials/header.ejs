@@ -18,6 +18,7 @@
                             <% if (!currentUser) { %>
                             <li><a class="navcolor" href="/signup">Sign Up</a></li>
                             <%} else { %>
+                            <li><a class="navcolor" href="/users">All users</a></li>
                             <li><a class="navcolor" href="/library">Library</a></li>
                             <li><a class="navcolor" href="/users/<%= currentUser._id.toString() %>"><%= currentUser.username %></a></li>
                             <li><a class="navcolor" href="/signout">Sign Out</a></li>

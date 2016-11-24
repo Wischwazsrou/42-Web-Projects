@@ -1,0 +1,25 @@
+<% include ./partials/header.ejs %>
+
+<div id="backgroundProfile">
+    <div class="page header">
+        <h1 class="text-center">User Profile</h1>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <%  users.forEach(function (user) {
+                        if (user.username !== currentUser.username){ %>
+                <div id="allUsersCards" class="thumbnail">
+                    <a href="/users/<%= user._id.toString()%>">
+                        <img id="allUsersPic" src="<%= user.picture %>">
+                    </a>
+                    <p class="text-center"><%= user.username %></p>
+                </div>
+                <%      }
+                    }) %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include ./partials/footer.ejs %>
