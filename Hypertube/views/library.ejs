@@ -1,0 +1,50 @@
+<% include ./partials/header.ejs %>
+
+<div id="backgroundLibrary">
+    <div class="page header">
+        <h1 class="text-center">Library</h1>
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-1 filter_container" style="border: green solid 1px;">
+        <ul class="nav nav-pills nav-stacked">
+            <li><a href="#">Aventure</a></li>
+            <li><a href="#">Drame</a></li>
+            <li><a href="#">Thriller</a></li>
+            <li><a href="#">Fantastique</a></li>
+        </ul>
+    </div>
+    <div class="col-md-9">
+        <div class="container">
+            <form class="input-group">
+                <a class="input-group-addon" href="#"><i class="glyphicon glyphicon-search"></i></a>
+                <input class="form-control search" type="text" placeholder="Research">
+            </form>
+            <div class="container library_container" style="border: red solid 2px;">
+                <div class="row">
+                    <div class="well">Recent video watched</div>
+                    <div class="col-md-12">
+                        <div class="card" style="border: green solid 1px; width: 150px; height: 150px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="container library_container" style="border: red solid 2px;">
+                <div class="row">
+                    <div class="well">Most popular video this week</div>
+                    <div class="col-md-12">
+                        <div class="card" style="border: green solid 1px; width: 150px; height: 150px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="container library_container" style="border: red solid 2px;">
+                <div class="row">
+                    <div class="well">Most popular video this month</div>
+                    <div class="col-md-12">
+                        <div class="card" style="border: green solid 1px; width: 150px; height: 150px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include ./partials/footer.ejs %>

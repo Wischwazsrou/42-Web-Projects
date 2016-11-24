@@ -1,0 +1,81 @@
+form{
+    opacity: 1;
+}
+
+.navbar{
+    background-color: #18121E;
+}
+
+.navcolor{
+    color: #EAC67A;
+}
+
+#body{
+    margin-top: 50px;
+}
+
+.home_container{
+    margin-top: 10%;
+}
+
+.text-center{
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+    color: #EAC67A;
+}
+
+#backgroundHome{
+    width: 99vw;
+    height: 100vh;
+    background-image: url(/img/Interstellar.jpg);
+}
+
+#backgroundSignup{
+    width: 99vw;
+    height: 100vh;
+}
+
+#backgroundContent{
+    color: #EAC67A;
+}
+
+.sign_in, .sign_up{
+    background-color: #18121E;
+}
+
+.title{
+    color: #984B43;
+}
+
+.backgroundProfile{
+    background-image: url(/img/test.jpg);
+}
+
+.library_container{
+    margin-top: 50px;
+}
+
+.filter_container{
+    margin-top: 84px;
+    height: 1000px;
+}
+
+.search{
+    max-width: 300px;
+}
+
+#backgroundStreaming{
+    width: 99vw;
+    height: 100vh;
+    background-image: url(/img/Django.jpg);
+}
+
+.forms{
+    background-color: #18121E;
+    margin-top: 30px;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.yellow{
+    color: #EAC67A;
+}
