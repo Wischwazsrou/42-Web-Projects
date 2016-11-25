@@ -38,18 +38,30 @@
             <div class="col-md-2"></div>
             <div class="col-md-4 sign_in">
                 <h2 class="text-center">Sign Up</h2>
-                <form action="/signup" method="POST">
+                <form action="/signup" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label>Username</label>
+                        <label class="yellow">Username</label>
                         <input class="form-control" type="text" name="username" placeholder="Username">
                     </div>
                     <div class="form-group">
-                        <label>Email Address</label>
+                        <label class="yellow">First Name</label>
+                        <input class="form-control" type="text" name="first_name" placeholder="First Name">
+                    </div>
+                    <div class="form-group">
+                        <label class="yellow">Last Name</label>
+                        <input class="form-control" type="text" name="last_name" placeholder="Last Name">
+                    </div>
+                    <div class="form-group">
+                        <label class="yellow">Email Address</label>
                         <input class="form-control" type="email" name="email" placeholder="Email Address">
                     </div>
                     <div class="form-group">
-                        <label>Password</label>
+                        <label class="yellow">Password</label>
                         <input class="form-control" type="password" name="password" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <label class="yellow">Picture</label>
+                        <input type="file" name="displayImage">
                     </div>
                     <button type="submit" class="btn btn-primary">Sign Up</button>
                 </form>

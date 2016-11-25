@@ -4,8 +4,10 @@ var mongoose    = require("mongoose"),
 
 var users = [
     {
-        username: "Pam",
-        password: hash("pam123", "whirlpool", "base64"),
+        username: "pbeesly",
+        firstName: "Pam",
+        lastName: "Beesly",
+        password: hash("Beesly123*", "whirlpool", "base64"),
         email: "docjr0605@hotmail.com",
         about: "What is love ?!",
         picture: "/img/Pam.jpg",
@@ -14,8 +16,10 @@ var users = [
         token: ""
     },
     {
-        username: "Jim",
-        password: hash("jim123", "whirlpool", "base64"),
+        username: "jhalpert",
+        firstName: "Jim",
+        lastName: "Halpert",
+        password: hash("Halpert123*", "whirlpool", "base64"),
         email: "jim@hotmail.com",
         about: "Baby don'thurt me...",
         picture: "/img/Jim.jpg",
@@ -25,8 +29,10 @@ var users = [
 
     },
     {
-        username: "Dwight",
-        password: hash("dwight123", "whirlpool", "base64"),
+        username: "dschrute",
+        firstName: "Dwight",
+        lastName: "Schrute",
+        password: hash("Dwight123*", "whirlpool", "base64"),
         email: "dwight@hotmail.com",
         about: "NO MORE !",
         picture: "/img/Dwight.jpg",

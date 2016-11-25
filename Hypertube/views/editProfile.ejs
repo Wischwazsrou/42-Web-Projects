@@ -45,9 +45,15 @@
         <div class="row">
             <div class="col-md-1"></div>
             <div class="col-md-10 forms">
-                <div class="text-center">Update your profile pic ?</div>
-                <form action="/users/change_pic" method="POST" enctype="multipart/form-data">
-                    <input type="file" name="displayImage">
+                <form action="/users/change_info" method="POST">
+                    <div class="form-group">
+                        <label class="yellow">First Name</label>
+                        <input class="form-control" type="text" name="first_name" value="<%= currentUser.firstName %>">
+                    </div>
+                    <div class="form-group">
+                        <label class="yellow">Last Name</label>
+                        <input class="form-control" type="text" name="last_name" value="<%= currentUser.lastName %>">
+                    </div>
                     <button type="submit" class="btn btn-primary">Send</button>
                 </form>
             </div>
@@ -56,7 +62,7 @@
         <div class="row">
             <div class="col-md-1"></div>
             <div class="col-md-10 forms">
-                <div class="text-center">Your current email address is <%= user.email %></div>
+                <div class="text-center">Your current email address is <%= currentUser.email %></div>
                 <form action="/users/change_email" method="POST">
                     <div class="form-group">
                         <label class="yellow">New email address</label>
@@ -98,8 +104,19 @@
                 <form action="/users/change_about" method="POST">
                     <div class="form-group">
                         <label class="yellow">About</label>
-                        <textarea class="form-control" type="text" name="about"><%= user.about %></textarea>
+                        <textarea class="form-control" type="text" name="about"><%= currentUser.about %></textarea>
                     </div>
+                    <button type="submit" class="btn btn-primary">Send</button>
+                </form>
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-10 forms">
+                <div class="text-center">Update your profile pic ?</div>
+                <form action="/users/change_pic" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="displayImage">
                     <button type="submit" class="btn btn-primary">Send</button>
                 </form>
             </div>

@@ -47,7 +47,7 @@ app.get("/:id/edit_profile", isLoggedIn, function (req, res) {
                     res.render("home");
                 }
                 else {
-                    res.render("editProfile", {user: user});
+                    res.render("editProfile");
                 }
             }
             else
@@ -57,6 +57,26 @@ app.get("/:id/edit_profile", isLoggedIn, function (req, res) {
     else{
         res.render("home");
     }
+});
+
+app.post("/change_info", isLoggedIn, function (req, res) {
+   if (validator.isAlpha(req.body.first_name) === true){
+       if (validator.isAlpha(req.body.last_name) === true){
+           users.updateName(req.user.username, req.body.first_name, req.body.last_name);
+           req.flash("success", "Your information as been updated");
+           res.redirect("/users/" + req.user._id.toString());
+       }
+       else{
+           req.flash("error", " Error:");
+           req.flash("info", "Invalid last name");
+           res.redirect("/users/" + req.user._id.toString() + "/edit_profile");
+       }
+   }
+   else{
+       req.flash("error", " Error:");
+       req.flash("info", "Invalid first name");
+       res.redirect("/users/" + req.user._id.toString() + "/edit_profile");
+   }
 });
 
 app.post("/change_email", isLoggedIn, function (req, res) {
@@ -124,11 +144,9 @@ app.post("/change_password", isLoggedIn, function (req, res) {
 });
 
 app.post("/change_about", isLoggedIn, function (req, res) {
-    users.getSingleUserByUsername(req.user.username, function (err, user) {
-        users.updateAbout(user.username, req.body.about);
-        req.flash("success", "Your information has been updated.");
-        res.redirect("/users/" + req.user._id.toString());
-    })
+    users.updateAbout(req.user.username, req.body.about);
+    req.flash("success", "Your information has been updated.");
+    res.redirect("/users/" + req.user._id.toString());
 });
 
 app.post("/change_pic", isLoggedIn, upload.single("displayImage"), function (req, res) {

@@ -5,7 +5,18 @@ var express         = require("express"),
     nodemailer      = require("nodemailer"),
     smtpTransport   = require('nodemailer-smtp-transport'),
     randomstring    = require("randomstring"),
+    multer          = require("multer")
     users           = require("../models/users_model");
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './public/img')
+    },
+    filename: function (req, file, cb) {
+        cb(null, req.body.username + "." + file.originalname.split(".")[1]);
+    }
+});
+var upload = multer({ storage: storage });
 
 app.get("/", function (req, res) {
     res.render("home");
@@ -43,12 +54,23 @@ app.post("/", passport.authenticate("local",
     }
 );
 
-app.post("/signup", function (req, res) {
+app.post("/signup", upload.single("displayImage"), function (req, res) {
     var error   = false,
-        message = "";
+        message = "",
+        format = "";
 
+    if (req.file)
+        format = req.file.filename.split(".")[1];
     if (validator.isAlphanumeric(req.body.username) === false){
         message = message + "/Invalid username";
+        error = true;
+    }
+    if (validator.isAlpha(req.body.first_name) === false){
+        message = message + "/Invalid first name";
+        error = true;
+    }
+    if (validator.isAlpha(req.body.last_name) === false){
+        message = message + "/Invalid last name";
         error = true;
     }
     if (validator.isEmail(req.body.email) === false) {
@@ -57,6 +79,10 @@ app.post("/signup", function (req, res) {
     }
     if (req.body.password.match(/^[a-zA-Z0-9?@.*;:!_-]{8,18}$/) === null) {
         message = message + "/Invalid password. Must contain between 8 and 18 characters. You also can only use the following special characters [?@.*;:!_-]";
+        error = true;
+    }
+    if (format !== "png" && format !== "jpg" && format !== "jpeg"){
+        message = message + "/Wrong type of file.";
         error = true;
     }
     if (error === false) {

@@ -6,8 +6,11 @@ module.exports = {
     addUser: function (req) {
         User.create({
             username: req.body.username,
+            firstName: req.body.first_name,
+            lastName: req.body.last_name,
             password: hash(req.body.password, "whirlpool", "base64"),
-            email: req.body.email
+            email: req.body.email,
+            picture: "/img/" + req.file.filename
         }, function (err) {
             if (err)
                 console.log(err);
@@ -66,5 +69,17 @@ module.exports = {
             if (err)
                 console.log(err);
         })
+    },
+    updateName: function (username, firstName, lastName) {
+        User.findOneAndUpdate({username: username},
+            {
+                $set:{
+                    firstName: firstName,
+                    lastName: lastName
+                }
+            }, function (err) {
+                if (err)
+                    console.log(err);
+            })
     }
 };

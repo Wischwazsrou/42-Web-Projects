@@ -2,7 +2,7 @@
 
 <div id="backgroundProfile">
     <div class="page header">
-        <h1 class="text-center">My Profile</h1>
+        <h1 class="text-center"><%= user.username %></h1>
     </div>
     <div class="container">
         <%
@@ -31,7 +31,7 @@
                 <div class="text-center backgroundProfile">
                     <img id="profilePic" class="img-rounded" src="<%= user.picture %>">
                     <h2>
-                        <%= user.username %>
+                        <%= user.firstName + " " + user.lastName %>
                         <% if (user._id.toString() === currentUser._id.toString()) { %>
                             <a href="/users/<%= currentUser._id.toString()%>/edit_profile"><i class="glyphicon glyphicon-edit"></i></a>
                         <% }%>
