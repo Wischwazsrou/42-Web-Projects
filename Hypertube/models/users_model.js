@@ -101,5 +101,22 @@ module.exports = {
                 if (err)
                     console.log(err);
             })
+    },
+    updateUserWithfb: function (id, profile, token) {
+        User.findOneAndUpdate({_id: mongoose.Types.ObjectId(id)},
+            {
+                $set:{
+                    facebook:{
+                        id      : profile.id,
+                        token   : token,
+                        email   : profile.emails[0].value,
+                        name    : profile.name.familyName + " " + profile.name.givenName
+
+                    }
+                }
+            }, function (err) {
+                if (err)
+                    console.log(err);
+            })
     }
 };

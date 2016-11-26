@@ -5,7 +5,7 @@ var express         = require("express"),
     nodemailer      = require("nodemailer"),
     smtpTransport   = require('nodemailer-smtp-transport'),
     randomstring    = require("randomstring"),
-    multer          = require("multer")
+    multer          = require("multer"),
     users           = require("../models/users_model");
 
 var storage = multer.diskStorage({
