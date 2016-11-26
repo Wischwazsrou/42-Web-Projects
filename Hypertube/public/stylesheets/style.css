@@ -97,3 +97,18 @@ form{
     max-height: 120px;
     max-width: 120px;
 }
+
+.item{
+    display: inline-block;
+    width: 500px;
+    height: 350px;
+    margin-right: 20px;
+    margin-left: 15px;
+}
+
+.hideOverflow
+{
+    overflow: auto;
+    text-overflow: ellipsis;
+    height: 180px;
+}

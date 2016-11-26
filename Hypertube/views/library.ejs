@@ -19,27 +19,23 @@
                 <a class="input-group-addon" href="#"><i class="glyphicon glyphicon-search"></i></a>
                 <input class="form-control search" type="text" placeholder="Research">
             </form>
-            <div class="container library_container" style="border: red solid 2px;">
+            <div class="container library_container">
                 <div class="row">
-                    <div class="well">Recent video watched</div>
+                    <h4 class="well">Currently most popular video</h4>
                     <div class="col-md-12">
-                        <div class="card" style="border: green solid 1px; width: 150px; height: 150px;"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="container library_container" style="border: red solid 2px;">
-                <div class="row">
-                    <div class="well">Most popular video this week</div>
-                    <div class="col-md-12">
-                        <div class="card" style="border: green solid 1px; width: 150px; height: 150px;"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="container library_container" style="border: red solid 2px;">
-                <div class="row">
-                    <div class="well">Most popular video this month</div>
-                    <div class="col-md-12">
-                        <div class="card" style="border: green solid 1px; width: 150px; height: 150px;"></div>
+                        <% movies.forEach(function (movie) { %>
+                        <div class="item">
+                            <div class="col-md-5">
+                                <img class="img-fluid" src="http://image.tmdb.org/t/p/w185<%= movie.poster_path %>">
+                            </div>
+                            <div class="col-md-7" style="height: 300px;">
+                                <h4 class="text-center"><%= movie.original_title %></h4>
+                                <p><strong>Release in: </strong><%= movie.release_date.split("-")[0]%></p>
+                                <p><strong>Rating: </strong><%= movie.vote_average%></p>
+                                <p class="hideOverflow"><%= movie.overview %></p>
+                            </div>
+                        </div>
+                        <% })%>
                     </div>
                 </div>
             </div>

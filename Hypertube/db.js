@@ -6,13 +6,12 @@ var users = [
     {
         local: {
             username: "pbeesly",
-            email: "docjr0605@hotmail.com",
+            password: hash("Beesly123*", "whirlpool", "base64"),
             token: ""
         },
         firstName: "Pam",
         lastName: "Beesly",
-        password: hash("Beesly123*", "whirlpool", "base64"),
-
+        email: "docjr0605@hotmail.com",
         about: "What is love ?!",
         picture: "/img/Pam.jpg",
         favoriteMovies: ["Inception", "Django Unchained"],
@@ -21,12 +20,12 @@ var users = [
     {
         local: {
             username: "jhalpert",
-            email: "jim@hotmail.com",
+            password: hash("Halpert123*", "whirlpool", "base64"),
             token: ""
         },
         firstName: "Jim",
         lastName: "Halpert",
-        password: hash("Halpert123*", "whirlpool", "base64"),
+        email: "jim@hotmail.com",
         about: "Baby don'thurt me...",
         picture: "/img/Jim.jpg",
         favoriteMovies: ["Interstellar", "Deadpool"],
@@ -35,12 +34,12 @@ var users = [
     {
         local: {
             username: "dschrute",
-            email: "dwight@hotmail.com",
+            password: hash("Dwight123*", "whirlpool", "base64"),
             token: ""
         },
         firstName: "Dwight",
         lastName: "Schrute",
-        password: hash("Dwight123*", "whirlpool", "base64"),
+        email: "dwight@hotmail.com",
         about: "NO MORE !",
         picture: "/img/Dwight.jpg",
         favoriteMovies: ["Hooligans"],
