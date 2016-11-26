@@ -86,7 +86,7 @@ app.post("/change_email", isLoggedIn, function (req, res) {
                 if (!user){
                     users.getSingleUserById(req.user._id, function (err, user) {
                         if (!err){
-                            if (user.password === hash(req.body.password, "whirlpool", "base64")){
+                            if (user.local.password === hash(req.body.password, "whirlpool", "base64")){
                                 users.updateEmail(req.user._id, req.body.email);
                                 req.flash("success", "Your email address has been updated.");
                                 res.redirect("/users/" + req.user._id.toString());
@@ -116,10 +116,10 @@ app.post("/change_email", isLoggedIn, function (req, res) {
 
 app.post("/change_password", isLoggedIn, function (req, res) {
     users.getSingleUserById(req.user._id, function (err, user) {
-        if (user.password === hash(req.body.current_password, "whirlpool", "base64")){
+        if (user.local.password === hash(req.body.current_password, "whirlpool", "base64")){
             if (req.body.new_password.match(/^[a-zA-Z0-9?@.*;:!_-]{8,18}$/) !== null){
                 if (req.body.new_password === req.body.confirm_password){
-                    users.updatePassword(user.username, req.body.new_password);
+                    users.updatePassword(user.local.username, req.body.new_password);
                     req.flash("success", "Your password has been updated.");
                     res.redirect("/users/" + req.user._id.toString());
                 }

@@ -65,6 +65,15 @@ app.get("/authGoogle/callback", passport.authenticate("google",
     }
 ));
 
+app.get("/auth42", passport.authenticate("42"));
+
+app.get("/auth42/callback", passport.authenticate("42",
+    {
+        successRedirect: "/library",
+        failureRedirect: "/"
+    }
+));
+
 app.post("/signup", upload.single("displayImage"), function (req, res) {
     var error   = false,
         message = "",
@@ -139,11 +148,6 @@ app.get("/change_pwd", function (req, res) {
     res.render("changePwd");
 });
 
-app.get("/error", function (req, res) {
-    req.flash("error", "Error: Wrong username or password.");
-    res.redirect("/");
-});
-
 app.post("/forgot_pwd", function (req, res) {
     if(validator.isAlphanumeric(req.body.username) === true) {
         users.getSingleUserByUsername(req.body.username, function (err, user) {
@@ -154,7 +158,7 @@ app.post("/forgot_pwd", function (req, res) {
             }
             else {
                 var token = randomstring.generate(8);
-                users.updateToken(user.username, token);
+                users.updateToken(user.local.username, token);
                 var options = {
                     service: 'outlook',
                     auth: {
@@ -172,7 +176,7 @@ app.post("/forgot_pwd", function (req, res) {
                     to: user.email,
                     subject: 'Reset Password',
                     text: '',
-                    html: '<p>Hi ' + user.username + ' ! You asked for a reset of your password. Click on the link below ' +
+                    html: '<p>Hi ' + user.firstName + ' ' + user.lastName + ' ! You asked for a reset of your password. Click on the link below ' +
                     'and insert this code <strong>' + token + '</strong> to get a new one</p>' +
                     '<a href="http://localhost:3000/change_pwd">Link</a>'
                 };
@@ -204,8 +208,8 @@ app.post("/change_pwd", function (req, res) {
             if (req.body.new_password.match(/^[a-zA-Z0-9?@.*;:!_-]{8,18}$/) !== null) {
                 if (req.body.new_password === req.body.confirm_password) {
                     if (req.body.code === user.token) {
-                        users.updatePassword(user.username, req.body.new_password);
-                        users.updateToken(user.username, "");
+                        users.updatePassword(user.local.username, req.body.new_password);
+                        users.updateToken(user.local.username, "");
                         req.flash("success", "Your password has been changed. You can now sign in.");
                         res.redirect("/");
                     }
@@ -233,6 +237,11 @@ app.post("/change_pwd", function (req, res) {
             res.redirect("/change_pwd");
         }
     });
+});
+
+app.get("/error", function (req, res) {
+    req.flash("error", "Error: Wrong username or password.");
+    res.redirect("/");
 });
 
 function  isLoggedIn(req, res, next) {

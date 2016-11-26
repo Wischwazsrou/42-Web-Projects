@@ -2,7 +2,8 @@ var User        = require("./collections/user"),
     passport    = require("passport"),
     local       = require("./passports/local"),
     facebook    = require("./passports/facebook"),
-    google      = require("./passports/google");
+    google      = require("./passports/google"),
+    fortytwo    = require("./passports/42");
 
 module.exports = function () {
 
@@ -22,4 +23,5 @@ module.exports = function () {
     passport.use(local);
     passport.use(facebook);
     passport.use(google);
+    passport.use(fortytwo);
 };

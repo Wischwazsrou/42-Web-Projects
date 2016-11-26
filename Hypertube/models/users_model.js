@@ -5,10 +5,12 @@ var mongoose    = require("mongoose"),
 module.exports = {
     addUser: function (req) {
         User.create({
-            username    : req.body.username,
+            local : {
+                username    : req.body.username,
+                password    : hash(req.body.password, "whirlpool", "base64")
+            },
             firstName   : req.body.first_name,
             lastName    : req.body.last_name,
-            password    : hash(req.body.password, "whirlpool", "base64"),
             email       : req.body.email,
             picture     : "/img/" + req.file.filename
         }, function (err) {
@@ -20,10 +22,7 @@ module.exports = {
         User.create({
             facebook:{
                 id      : profile.id,
-                token   : token,
-                email   : profile.emails[0].value,
-                name    : profile.name.familyName + " " + profile.name.givenName
-
+                token   : token
             },
             firstName   : profile.name.familyName,
             lastName    : profile.name.givenName,
@@ -40,13 +39,27 @@ module.exports = {
         User.create({
             google:{
                 id      : profile.id,
-                token   : token,
-                email   : profile.emails[0].value,
-                name    : profile.displayName
-
+                token   : token
             },
             firstName   : profile.name.familyName,
             lastName    : profile.name.givenName,
+            email       : profile.emails[0].value,
+            picture     : "/img/empty_user.png"
+        }, function (err, user) {
+            if (err)
+                console.log(err);
+            else
+                callback(null, user);
+        })
+    },
+    addUserWith42: function (profile, token, callback) {
+        User.create({
+            42:{
+                id      : profile.id,
+                token   : token
+            },
+            firstName   : profile.name.givenName,
+            lastName    : profile.displayName.split(" ")[2],
             email       : profile.emails[0].value,
             picture     : "/img/empty_user.png"
         }, function (err, user) {
@@ -63,7 +76,7 @@ module.exports = {
         })
     },
     getSingleUserByUsername: function (username, callback) {
-        User.findOne({username: username}, function (err, user) {
+        User.findOne({"local.username": username}, function (err, user) {
             if (!err)
                 callback(null, user);
         })
@@ -75,7 +88,7 @@ module.exports = {
         })
     },
     getSingleUserById: function (id, callback) {
-        User.findOne({_id: id}, function (err, user) {
+        User.findOne({_id: mongoose.Types.ObjectId(id)}, function (err, user) {
             if (!err)
                 callback(null, user);
         })
@@ -87,7 +100,7 @@ module.exports = {
         })
     },
     updatePassword: function (username, password) {
-        User.findOneAndUpdate({username: username}, {$set:{password: hash(password, "whirlpool", "base64")}}, function (err) {
+        User.findOneAndUpdate({"local.username": username}, {$set:{"local.password": hash(password, "whirlpool", "base64")}}, function (err) {
                 if (err)
                     console.log(err);
         })
@@ -105,7 +118,7 @@ module.exports = {
         })
     },
     updateToken: function (username, token) {
-        User.findOneAndUpdate({username: username}, {$set:{token: token}}, function (err) {
+        User.findOneAndUpdate({"local.username": username}, {$set:{"local.token": token}}, function (err) {
             if (err)
                 console.log(err);
         })
@@ -128,10 +141,7 @@ module.exports = {
                 $set:{
                     facebook:{
                         id      : profile.id,
-                        token   : token,
-                        email   : profile.emails[0].value,
-                        name    : profile.name.familyName + " " + profile.name.givenName
-
+                        token   : token
                     }
                 }
             }, function (err) {
@@ -145,10 +155,21 @@ module.exports = {
                 $set:{
                     google:{
                         id      : profile.id,
-                        token   : token,
-                        email   : profile.emails[0].value,
-                        name    : profile.displayName
-
+                        token   : token
+                    }
+                }
+            }, function (err) {
+                if (err)
+                    console.log(err);
+            })
+    },
+    updateUserWith42: function (id, profile, token) {
+        User.findOneAndUpdate({_id: mongoose.Types.ObjectId(id)},
+            {
+                $set:{
+                    google:{
+                        id      : profile.id,
+                        token   : token
                     }
                 }
             }, function (err) {
