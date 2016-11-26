@@ -11,7 +11,7 @@ var storage = multer.diskStorage({
         cb(null, './public/img')
     },
     filename: function (req, file, cb) {
-        cb(null, req.user.username + "." + file.originalname.split(".")[1]);
+        cb(null, req.user._id + "." + file.originalname.split(".")[1]);
     }
 });
 var upload = multer({ storage: storage });
@@ -62,7 +62,7 @@ app.get("/:id/edit_profile", isLoggedIn, function (req, res) {
 app.post("/change_info", isLoggedIn, function (req, res) {
    if (validator.isAlpha(req.body.first_name) === true){
        if (validator.isAlpha(req.body.last_name) === true){
-           users.updateName(req.user.username, req.body.first_name, req.body.last_name);
+           users.updateName(req.user._id, req.body.first_name, req.body.last_name);
            req.flash("success", "Your information as been updated");
            res.redirect("/users/" + req.user._id.toString());
        }
@@ -84,10 +84,10 @@ app.post("/change_email", isLoggedIn, function (req, res) {
         users.getSingleUserByEmail(req.body.email, function (err, user) {
             if (!err){
                 if (!user){
-                    users.getSingleUserByUsername(req.user.username, function (err, user) {
+                    users.getSingleUserById(req.user._id, function (err, user) {
                         if (!err){
                             if (user.password === hash(req.body.password, "whirlpool", "base64")){
-                                users.updateEmail(req.user.username, req.body.email);
+                                users.updateEmail(req.user._id, req.body.email);
                                 req.flash("success", "Your email address has been updated.");
                                 res.redirect("/users/" + req.user._id.toString());
                             }
@@ -115,7 +115,7 @@ app.post("/change_email", isLoggedIn, function (req, res) {
 });
 
 app.post("/change_password", isLoggedIn, function (req, res) {
-    users.getSingleUserByUsername(req.user.username, function (err, user) {
+    users.getSingleUserById(req.user._id, function (err, user) {
         if (user.password === hash(req.body.current_password, "whirlpool", "base64")){
             if (req.body.new_password.match(/^[a-zA-Z0-9?@.*;:!_-]{8,18}$/) !== null){
                 if (req.body.new_password === req.body.confirm_password){
@@ -144,7 +144,7 @@ app.post("/change_password", isLoggedIn, function (req, res) {
 });
 
 app.post("/change_about", isLoggedIn, function (req, res) {
-    users.updateAbout(req.user.username, req.body.about);
+    users.updateAbout(req.user._id, req.body.about);
     req.flash("success", "Your information has been updated.");
     res.redirect("/users/" + req.user._id.toString());
 });
@@ -158,7 +158,7 @@ app.post("/change_pic", isLoggedIn, upload.single("displayImage"), function (req
         res.redirect("/users/" + req.user._id.toString() + "/edit_profile");
     }
     else{
-        users.updatePic(req.user.username, "/img/" + req.file.filename);
+        users.updatePic(req.user._id, "/img/" + req.file.filename);
         req.flash("success", "Your profile picture has been updated.");
         res.redirect("/users/" + req.user._id.toString());
     }

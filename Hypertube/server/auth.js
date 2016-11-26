@@ -54,6 +54,17 @@ app.post("/", passport.authenticate("local",
     }
 );
 
+app.get("/authFacebook", passport.authenticate("facebook",
+    {
+        scope: ["email"]
+    }
+));
+
+app.get('/authFacebook/callback', passport.authenticate('facebook', {
+        successRedirect : '/library',
+        failureRedirect : '/'
+    }));
+
 app.post("/signup", upload.single("displayImage"), function (req, res) {
     var error   = false,
         message = "",

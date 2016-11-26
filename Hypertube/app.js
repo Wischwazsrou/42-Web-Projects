@@ -3,10 +3,12 @@ var express         = require("express"),
     bodyParser      = require("body-parser"),
     passport        = require("passport"),
     LocalStrategy   = require("passport-local"),
+    FacebookStrategy = require("passport-facebook"),
     mongoose        = require("mongoose"),
     flash           = require("connect-flash"),
     hash            = require('nodejs-hash-performance'),
     User            = require("./collections/user"),
+    users           = require("./models/users_model"),
     db              = require("./db");
 
 var authRoutes      = require("./server/auth"),
@@ -35,18 +37,41 @@ app.use(passport.session());
 passport.use(new LocalStrategy({
     usernameField: "username",
     passwordField: "password"
-}, function (username, password, callback) {
+}, function (username, password, done) {
     User.findOne({username: username}, function (err, user) {
         if(!err){
             if (user){
                 if (user.password === hash(password, "whirlpool", "base64"))
-                    return callback(null, user);
+                    return done(null, user);
                 else
-                    return callback(null, false);
+                    return done(null, false);
             }
             else
-                return callback(null, false);
+                return done(null, false);
         }
+    })
+}));
+
+passport.use(new FacebookStrategy({
+    clientID: "1832946213646922",
+    clientSecret: "4bc2d0626ced9b11090c82403ef80929",
+    callbackURL: "http://localhost:3000/authFacebook/callback",
+    profileFields: ['id', 'emails', 'name']
+}, function (token, refreshToken, profile, done) {
+    process.nextTick(function () {
+        User.findOne({'facebook.id': profile.id}, function (err, user) {
+            if (err)
+                return done(err);
+            if (user){
+                return done(null, user);
+            }
+            else{
+                users.addUserWithFb(profile, token, function (err, user) {
+                    if (!err)
+                        return done(null, user);
+                });
+            }
+        })
     })
 }));
 

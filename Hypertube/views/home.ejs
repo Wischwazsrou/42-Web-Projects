@@ -52,6 +52,8 @@
                 </div>
             </div>
             <% }%>
+
+            <% if (!currentUser) { %>
             <div class="col-md-4 sign_in">
                 <h2 class="text-center">Sign In</h2>
                 <form action="/" method="POST">
@@ -70,10 +72,11 @@
                 <div>
                     <h3>Connection with :</h3>
                     <img src="/icons/42.png">
-                    <img src="/icons/facebook.png">
+                    <a href="/authFacebook"><img src="/icons/facebook.png"></a>
                     <img src="/icons/google.png">
                 </div>
             </div>
+            <% } %>
         </div>
     </div>
 </div>
