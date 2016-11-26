@@ -32,19 +32,6 @@ app.get("/signout", isLoggedIn, function(req, res){
     res.redirect("/");
 });
 
-app.get("/forgot_pwd", function (req, res) {
-   res.render("forgotPwd");
-});
-
-app.get("/change_pwd", function (req, res) {
-   res.render("changePwd");
-});
-
-app.get("/error", function (req, res) {
-    req.flash("error", "Error: Wrong username or password.");
-    res.redirect("/");
-});
-
 app.post("/", passport.authenticate("local",
     {
         successRedirect: "/library",
@@ -64,6 +51,19 @@ app.get('/authFacebook/callback', passport.authenticate('facebook', {
         successRedirect : '/library',
         failureRedirect : '/'
     }));
+
+app.get("/authGoogle", passport.authenticate("google",
+    {
+        scope: ["profile", "email"]
+    }
+));
+
+app.get("/authGoogle/callback", passport.authenticate("google",
+    {
+        successRedirect: "/library",
+        failureRedirect: "/"
+    }
+));
 
 app.post("/signup", upload.single("displayImage"), function (req, res) {
     var error   = false,
@@ -129,6 +129,19 @@ app.post("/signup", upload.single("displayImage"), function (req, res) {
         req.flash("info", message);
         return res.redirect("/signup");
     }
+});
+
+app.get("/forgot_pwd", function (req, res) {
+    res.render("forgotPwd");
+});
+
+app.get("/change_pwd", function (req, res) {
+    res.render("changePwd");
+});
+
+app.get("/error", function (req, res) {
+    req.flash("error", "Error: Wrong username or password.");
+    res.redirect("/");
 });
 
 app.post("/forgot_pwd", function (req, res) {

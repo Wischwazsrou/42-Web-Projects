@@ -36,6 +36,26 @@ module.exports = {
                 callback(null, user);
         })
     },
+    addUserWithGoogle: function (profile, token, callback) {
+        User.create({
+            google:{
+                id      : profile.id,
+                token   : token,
+                email   : profile.emails[0].value,
+                name    : profile.displayName
+
+            },
+            firstName   : profile.name.familyName,
+            lastName    : profile.name.givenName,
+            email       : profile.emails[0].value,
+            picture     : "/img/empty_user.png"
+        }, function (err, user) {
+            if (err)
+                console.log(err);
+            else
+                callback(null, user);
+        })
+    },
     getAlluser: function (callback) {
         User.find({}, function (err, users) {
             if (!err)
@@ -111,6 +131,23 @@ module.exports = {
                         token   : token,
                         email   : profile.emails[0].value,
                         name    : profile.name.familyName + " " + profile.name.givenName
+
+                    }
+                }
+            }, function (err) {
+                if (err)
+                    console.log(err);
+            })
+    },
+    updateUserWithGoogle: function (id, profile, token) {
+        User.findOneAndUpdate({_id: mongoose.Types.ObjectId(id)},
+            {
+                $set:{
+                    google:{
+                        id      : profile.id,
+                        token   : token,
+                        email   : profile.emails[0].value,
+                        name    : profile.displayName
 
                     }
                 }
