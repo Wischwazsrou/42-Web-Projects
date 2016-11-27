@@ -26,26 +26,9 @@
     <div class="col-md-1"></div>
     <div class="col-md-1 filter_container" style="border: green solid 1px;">
         <ul class="nav nav-pills nav-stacked">
-            <li><a href="/library/28">Action</a></li>
-            <li><a href="/library/12">Adventure</a></li>
-            <li><a href="/library/16">Animation</a></li>
-            <li><a href="/library/35">Comedy</a></li>
-            <li><a href="/library/80">Crime</a></li>
-            <li><a href="/library/99">Documentary</a></li>
-            <li><a href="/library/18">Drama</a></li>
-            <li><a href="/library/10751">Family</a></li>
-            <li><a href="/library/14">Fantasy</a></li>
-            <li><a href="/library/10769">Foreign</a></li>
-            <li><a href="/library/36">History</a></li>
-            <li><a href="/library/27">Horror</a></li>
-            <li><a href="/library/10402">Music</a></li>
-            <li><a href="/library/9648">Mystery</a></li>
-            <li><a href="/library/10749">Romance</a></li>
-            <li><a href="/library/878">Science Fiction</a></li>
-            <li><a href="/library/10770">TV Movie</a></li>
-            <li><a href="/library/53">Thriller</a></li>
-            <li><a href="/library/10752">War</a></li>
-            <li><a href="/library/37">Western</a></li>
+            <%  genres.forEach(function (genre) { %>
+                    <li><a href="/library/<%= genre.id%>"><%= genre.name %></a></li>
+            <%  }) %>
         </ul>
     </div>
     <div class="col-md-9">

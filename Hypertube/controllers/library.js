@@ -4,17 +4,23 @@ var express     = require("express"),
     validator   = require("validator");
 
 app.get("/", isLoggedIn, function (req, res) {
-    if (!req.session.movies) {
-        request("https://api.themoviedb.org/3/discover/movie?api_key=08ec0cb8989aefee24d9b23a10574190",
-            function (error, response, body) {
-                if (!error && response.statusCode == 200) {
-                    var movies = JSON.parse(body).results;
-                    res.render("library", {movies: movies});
-                }
-            });
-    }
-    else
-        res.render("library", {movies: req.session.movies});
+    request("https://api.themoviedb.org/3/discover/movie?api_key=08ec0cb8989aefee24d9b23a10574190",
+        function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                var movies = JSON.parse(body).results;
+                request("https://api.themoviedb.org/3/genre/movie/list?api_key=08ec0cb8989aefee24d9b23a10574190",
+                    function (error, response, body){
+                        if (!error && response.statusCode == 200){
+                            var genres = JSON.parse(body).genres;
+                            res.render("library", {movies: movies, genres: genres});
+                        }
+                        else
+                            console.log(error)
+                    });
+            }
+            else
+                console.log(error)
+        });
 });
 
 app.get("/:id", isLoggedIn, function (req, res) {
@@ -23,8 +29,17 @@ app.get("/:id", isLoggedIn, function (req, res) {
             function (error, response, body) {
                 if (!error && response.statusCode == 200){
                     var movies = JSON.parse(body).results;
-                    if (movies.length > 0)
-                        res.render("library", {movies: movies});
+                    if (movies.length > 0) {
+                        request("https://api.themoviedb.org/3/genre/movie/list?api_key=08ec0cb8989aefee24d9b23a10574190",
+                            function (error, response, body){
+                                if (!error && response.statusCode == 200){
+                                    var genres = JSON.parse(body).genres;
+                                    res.render("library", {movies: movies, genres: genres});
+                                }
+                                else
+                                    console.log(error)
+                            });
+                    }
                     else{
                         req.flash("error", "Error: ");
                         req.flash("info", "Invalid request.");
