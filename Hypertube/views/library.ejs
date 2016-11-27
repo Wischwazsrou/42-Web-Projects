@@ -24,13 +24,15 @@
     <% }%>
 
     <div class="col-md-1"></div>
-    <div class="col-md-1 filter_container aside">
-        <ul class="nav nav-pills nav-stacked">
-            <%  genres.forEach(function (genre) { %>
-                    <li><a href="/library/<%= genre.id%>"><%= genre.name %></a></li>
-            <%  }) %>
-        </ul>
-    </div>
+    <%  if (!session.search){%>
+        <div class="col-md-1 filter_container aside">
+            <ul class="nav nav-pills nav-stacked">
+                <%  genres.forEach(function (genre) { %>
+                        <li><a href="/library/genre=<%= genre.id%>"><%= genre.name %></a></li>
+                <%  }) %>
+            </ul>
+        </div>
+    <%  } %>
     <div class="col-md-9">
         <div class="container">
             <div class="row">
@@ -55,15 +57,16 @@
                         Sort By :
                         <select name="sortBy">
                             <option value="none">-</option>
-                            <option>Popularity Descending</option>
-                            <option>Popularity Ascending</option>
-                            <option>Rating Descending</option>
-                            <option>Rating Ascending</option>
-                            <option>Release Date Descending</option>
-                            <option>Release Date Ascending</option>
+                            <option value="popularity.desc">Popularity Descending</option>
+                            <option value="popularity.asc">Popularity Ascending</option>
+                            <option value="vote_average.desc">Rating Descending</option>
+                            <option value="vote_average.asc">Rating Ascending</option>
+                            <option value="release_date.desc">Release Date Descending</option>
+                            <option value="release_date.asc">Release Date Ascending</option>
                         </select>
                         <label>Keywords</label>
                         <input class="form-control search" type="text" placeholder="Research">
+                        <button type="submit" class="btn btn-primary">Send</button>
                     </form>
                 </div>
             </div>

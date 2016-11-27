@@ -246,6 +246,7 @@ app.get("/error", function (req, res) {
 
 app.get("/init", function (req, res) {
     req.session.videoType = "movie";
+    req.session.search = "";
     res.redirect("/library");
 });
 
