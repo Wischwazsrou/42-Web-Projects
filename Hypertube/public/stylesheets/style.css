@@ -2,6 +2,10 @@ form{
     opacity: 1;
 }
 
+body{
+    background-color: #EBEDED;
+}
+
 .navbar{
     background-color: #18121E;
 }
@@ -50,12 +54,8 @@ form{
     background-image: url(/img/test.jpg);
 }
 
-.library_container{
-    margin-top: 50px;
-}
-
 .filter_container{
-    margin-top: 84px;
+    margin-top: 50px;
     height: 1000px;
 }
 
@@ -98,12 +98,27 @@ form{
     max-width: 120px;
 }
 
+.aside{
+    margin-top: 173px;
+    box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7),
+    -1px 2px 20px rgba(255, 255, 255, 0.6) inset;
+    background-color: #F5F5F5;
+}
+
 .item{
     display: inline-block;
     width: 500px;
-    height: 350px;
+    height: 330px;
     margin-right: 20px;
     margin-left: 15px;
+    box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7),
+                -1px 2px 20px rgba(255, 255, 255, 0.6) inset;
+    margin-bottom: 10px;
+    background-color: #F5F5F5;
+}
+
+.miniatures{
+    margin-top: 25px;
 }
 
 .hideOverflow

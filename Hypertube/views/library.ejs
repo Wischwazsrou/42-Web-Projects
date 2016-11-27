@@ -24,7 +24,7 @@
     <% }%>
 
     <div class="col-md-1"></div>
-    <div class="col-md-1 filter_container" style="border: green solid 1px;">
+    <div class="col-md-1 filter_container aside">
         <ul class="nav nav-pills nav-stacked">
             <%  genres.forEach(function (genre) { %>
                     <li><a href="/library/<%= genre.id%>"><%= genre.name %></a></li>
@@ -33,22 +33,58 @@
     </div>
     <div class="col-md-9">
         <div class="container">
-            <form class="input-group">
-                <a class="input-group-addon" href="#"><i class="glyphicon glyphicon-search"></i></a>
-                <input class="form-control search" type="text" placeholder="Research">
-            </form>
-            <div class="container library_container">
+            <div class="row">
+                <div class="col-md-12" style="border: red solid 1px;">
+                    <p>Advanced Research</p>
+                    <form class="input-group" action="/library/search" method="POST">
+                        Genres :
+                        <select name="genres">
+                            <option value="none">-</option>
+                            <%  genres.forEach(function (genre) { %>
+                                    <option value="<%= genre.id %>"><%= genre.name %></option>
+                            <%  })%>
+                        </select>
+                        Year :
+                        <select name="years">
+                            <option value="none">-</option>
+                            <%  var currentYear = new Date().getFullYear();
+                                for(var i = currentYear; i >= 1900; i--){ %>
+                                    <option value="<%= i %>"><%= i %></option>
+                            <%  }%>
+                        </select>
+                        Sort By :
+                        <select name="sortBy">
+                            <option value="none">-</option>
+                            <option>Popularity Descending</option>
+                            <option>Popularity Ascending</option>
+                            <option>Rating Descending</option>
+                            <option>Rating Ascending</option>
+                            <option>Release Date Descending</option>
+                            <option>Release Date Ascending</option>
+                        </select>
+                        <label>Keywords</label>
+                        <input class="form-control search" type="text" placeholder="Research">
+                    </form>
+                </div>
+            </div>
+            <div class="container">
                 <div class="row">
-                    <h4 class="well">Currently most popular video</h4>
+                    <h4 class="well"><a href="/library">Movies</a> | <a href="/library/tvShow">Tv Shows</a></h4>
                     <div class="col-md-12">
                         <% movies.forEach(function (movie) { %>
                         <div class="item">
                             <div class="col-md-5">
-                                <img class="img-fluid" src="http://image.tmdb.org/t/p/w185<%= movie.poster_path %>">
+                                <img class="miniatures" src="http://image.tmdb.org/t/p/w185<%= movie.poster_path %>">
                             </div>
                             <div class="col-md-7" style="height: 300px;">
-                                <h4 class="text-center"><%= movie.original_title %></h4>
-                                <p><strong>Release in: </strong><%= movie.release_date.split("-")[0]%></p>
+                                <%  if (session.videoType == "movie") {%>
+                                        <h4 class="text-center"><%= movie.original_title %></h4>
+                                        <p><strong>Release in: </strong><%= movie.release_date.split("-")[0]%></p>
+                                <%  }
+                                    else { %>
+                                        <h4 class="text-center"><%= movie.original_name %></h4>
+                                        <p><strong>Original Release: </strong><%= movie.first_air_date.split("-")[0]%></p>
+                                <%  }%>
                                 <p><strong>Rating: </strong><%= movie.vote_average%></p>
                                 <p class="hideOverflow"><%= movie.overview %></p>
                             </div>

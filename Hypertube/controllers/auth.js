@@ -34,11 +34,10 @@ app.get("/signout", isLoggedIn, function(req, res){
 
 app.post("/", passport.authenticate("local",
     {
-        successRedirect: "/library",
+        successRedirect: "/init",
         failureRedirect: "/error"
     }),
     function (req, res) {
-        req.session.movies = "";
     }
 );
 
@@ -243,6 +242,11 @@ app.post("/change_pwd", function (req, res) {
 app.get("/error", function (req, res) {
     req.flash("error", "Error: Wrong username or password.");
     res.redirect("/");
+});
+
+app.get("/init", function (req, res) {
+    req.session.videoType = "movie";
+    res.redirect("/library");
 });
 
 function  isLoggedIn(req, res, next) {
