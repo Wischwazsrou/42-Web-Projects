@@ -38,6 +38,7 @@ app.post("/", passport.authenticate("local",
         failureRedirect: "/error"
     }),
     function (req, res) {
+        req.session.movies = "";
     }
 );
 
