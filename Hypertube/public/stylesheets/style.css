@@ -63,12 +63,6 @@ body{
     max-width: 300px;
 }
 
-#backgroundStreaming{
-    width: 99vw;
-    height: 100vh;
-    background-image: url(/img/Django.jpg);
-}
-
 .forms{
     background-color: #18121E;
     margin-bottom: 50px;

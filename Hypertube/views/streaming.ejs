@@ -4,33 +4,64 @@
     <div class="page header">
         <h1 class="text-center">Streaming</h1>
     </div>
-    <div class="container home_container" style="background-color: #18121E;">
-        <div class="row">
-            <h1 class="title"  style="display: inline">Django Unchained</h1>
-            <p class="yellow">(2012)</p>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-2">
+           <img src="http://image.tmdb.org/t/p/w300<%= movie.poster_path %>">
         </div>
-        <br>
-        <div class="row">
-            <p class="yellow">
-                With the help of a German bounty hunter, a freed slave sets out to rescue his wife
-                from a brutal Mississippi plantation owner.
-            </p>
+        <div class="col-md-6">
+            <div class="row">
+                <h1 class="title text-center" style="font-size: 40px;"><%= movie.original_title %></h1>
+                <p class="yellow text-center" style="font-size: 15px;"><%= movie.release_date.split("-")[0] %></p>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="yellow">
+                        <%= movie.overview %>
+                    </p>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-5">
+                    <p class="yellow">Produced by: <%= movie.credits.crew[0].name %></p>
+                    <p class="yellow">Directed by: <%= movie.credits.crew[1].name %></p>
+                    <p class="yellow">Staring :</p>
+                    <ul class="yellow">
+                    <%  for (var i = 0; i < 5; i++) { %>
+                        <li class="yellow"><%= movie.credits.cast[i].name %></li>
+                    <%  } %>
+                    </ul>
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-5">
+                    <p class="yellow">Running time: <%= movie.runtime %> minutes</p>
+                    <p class="yellow">Langage: <%= movie.spoken_languages[0].name%></p>
+                    <p class="yellow">IMDb rating: <%= movie.vote_average %></p>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-5"></div>
+                <div class="col-md-2">
+                    <button class="btn btn-default">Start Movie</button>
+                </div>
+                <div class="col-md-5"></div>
+            </div>
+            <br>
         </div>
-        <br>
-        <div class="row">
-            <p class="yellow">Director:</p>
-            <p class="yellow">Writer:</p>
-            <p class="yellow">Stars:</p>
-            <p class="yellow">IMDb rating:</p>
+    </div>
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6" style="border: red solid 1px;">
+            <p>comments</p>
+            <form>
+                <input class="form-control" type="text"  name="comment" placeholder="Comment here ...">
+            </form>
         </div>
-        <br>
-        <div class="row">
-            <button class="btn btn-default">Start Movie</button>
-        </div>
-        <br>
-        <div class="row">
-            <p class="yellow">See comments</p>
-        </div>
+        <div class="col-md-3"></div>
     </div>
 </div>
 
