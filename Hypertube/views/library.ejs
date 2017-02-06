@@ -27,9 +27,13 @@
     <%  if (!session.search){%>
         <div class="col-md-1 filter_container aside">
             <ul class="nav nav-pills nav-stacked">
-                <%  genres.forEach(function (genre) { %>
-                        <li><a href="/library/genre=<%= genre.id%>"><%= genre.name %></a></li>
-                <%  }) %>
+                <%  genres.forEach(function (genre) {
+                        if (session.genre == genre.id) { %>
+                        <li class="active"><a id="genres" href="/library/genre=<%= genre.id%>"><%= genre.name %></a></li>
+                <%      } else { %>
+                        <li><a id="genres" href="/library/genre=<%= genre.id%>"><%= genre.name %></a></li>
+                <%      }
+                    }) %>
             </ul>
         </div>
     <%  } %>
@@ -37,7 +41,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12" style="border: red solid 1px;">
-                    <p>Advanced Research</p>
+                    <h4 class="well">Advanced Research</h4>
                     <form action="/library/search" method="POST">
                         <div class="row">
                             <div class="col-md-2">
@@ -71,16 +75,16 @@
                                     <option value="release_date.asc">Release Date Ascending</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label>Casting</label>
                                 <input class="form-control" type="text" name="people" placeholder="Search by an actor or actress">
                             </div>
                             <div class="col-md-2">
                                 <label>Min rating</label>
-                                <input class="form-control" type="number" name="rate" min="0" max="10">
+                                <input class="form-control" type="number" name="rate" min="0" max="10" value="0">
                             </div>
-                            <button type="submit" class="btn btn-primary">Send</button>
                         </div>
+                        <button type="submit" class="btn btn-primary centered">Send</button>
                     </form>
                     <hr>
                     <form action="/library/search" method="POST">
@@ -90,28 +94,38 @@
                     </form>
                 </div>
             </div>
+            <hr>
             <div class="container">
+                <%  if (session.pagination.currentPage > 1) { %>
+                    <p id="prev_page">previous page</p>
+                <%  }
+                    if (session.pagination.currentPage < session.pagination.totalPages){ %>
+                    <p id="next_page">Next page</p>
+                <%  } %>
+                <h2><%= session.pagination.index %></h2>
                 <div class="row">
-                    <h4 class="well"><a href="/library">Movies</a> | <a href="/library/tvShow">Tv Shows</a></h4>
-                    <div class="col-md-12">
-                        <% movies.forEach(function (movie) { %>
-                        <div class="item">
-                            <div class="col-md-5">
-                                <img class="miniatures" src="http://image.tmdb.org/t/p/w185<%= movie.poster_path %>">
-                            </div>
-                            <div class="col-md-7" style="height: 300px;">
-                                <%  if (session.videoType == "movie") {%>
+                    <div id="movies" class="col-md-12">
+                        <%  session.pagination.movies.forEach(function (movie) { %>
+                                <div class="item">
+                                    <div class="col-md-5">
+                                        <%  if (movie.poster_path) { %>
+                                        <img class="miniatures" src="http://image.tmdb.org/t/p/w185<%= movie.poster_path %>">
+                                        <%  } else { %>
+                                        <img class="miniatures" src="/img/img_not_found.png">
+                                        <%  } %>
+                                    </div>
+                                    <div class="col-md-7" style="height: 300px;">
                                         <a href="/streaming/<%= movie.id %>"><h4 class="text-center"><%= movie.original_title %></h4></a>
                                         <p><strong>Release in: </strong><%= movie.release_date.split("-")[0]%></p>
-                                <%  }
-                                    else { %>
-                                        <a href="/streaming/<%= movie.id %>"><h4 class="text-center"><%= movie.original_name %></h4></a>
-                                        <p><strong>Original Release: </strong><%= movie.first_air_date.split("-")[0]%></p>
-                                <%  }%>
-                                <p><strong>Rating: </strong><%= movie.vote_average%></p>
-                                <p class="hideOverflow"><%= movie.overview %></p>
-                            </div>
-                        </div>
+                                        <p><strong>Rating: </strong><%= movie.vote_average%></p>
+                                        <p class="hideOverflow"><%= movie.overview %></p>
+                                        <%  currentUser.moviesWatched.forEach(function (foundMovie) {
+                                            if (foundMovie == movie.id) { %>
+                                                <p style="color: red">Already seen</p>
+                                        <%      }
+                                            }) %>
+                                    </div>
+                                </div>
                         <% })%>
                     </div>
                 </div>
@@ -119,5 +133,32 @@
         </div>
     </div>
 </div>
+<script>
+    var next = document.getElementById("next_page");
+    var previous = document.getElementById("prev_page");
+    var page = document.getElementById("backgroundLibrary");
 
+    $(next).click(function () {
+        $.post(
+                "/library/changePage",
+                {
+                    page: 1
+                },
+                function displayMovie(data) {
+                    console.log(data);
+                    $(page).html(data);
+                }
+        )
+    })
+    $(previous).click(function () {
+        $.post(
+                "/library/changePage",
+                {
+                    page: -1
+                },
+                function displayMovie(data) {
+                }
+        )
+    })
+</script>
 <% include ./partials/footer.ejs %>

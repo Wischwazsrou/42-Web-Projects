@@ -12,13 +12,14 @@ var authRoutes      = require("./controllers/auth"),
     streamingRoutes = require("./controllers/streaming");
 
 mongoose.connect("mongodb://localhost/hypertube");
-//db.configDb();
+// db.configDb();
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 app.use(express.static("scripts"));
 app.set("views", "./client/views");
 app.set("view engine", "ejs");
+app.set('view cache', false);
 app.use(flash());
 
 app.use(require("express-session")({

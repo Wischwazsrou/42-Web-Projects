@@ -10,8 +10,21 @@
            <img src="http://image.tmdb.org/t/p/w300<%= movie.poster_path %>">
         </div>
         <div class="col-md-6">
-            <div class="row">
-                <h1 class="title text-center" style="font-size: 40px;"><%= movie.original_title %></h1>
+            <div id="movieId" value="<%= movie.id %>" class="row">
+                <h1 id="movieName" value="<%= movie.original_title %>" class="title text-center" style="font-size: 40px;">
+                    <%= movie.original_title %>
+                    <%  var like = false;
+                        currentUser.favoriteMovies.forEach(function (foundMovie) {
+                            if (foundMovie.id == movie.id)
+                                like = true;
+                        })
+                        if (like === true){ %>
+                            <i id="like" style="color: #FFD700; font-size: 25px;" class="glyphicon glyphicon-star"></i>
+                    <%  }
+                        else{ %>
+                            <i id="like" style="color: gray; font-size: 25px;" class="glyphicon glyphicon-star-empty"></i>
+                    <%  }%>
+                </h1>
                 <p class="yellow text-center" style="font-size: 15px;"><%= movie.release_date.split("-")[0] %></p>
             </div>
             <br>
@@ -26,19 +39,26 @@
             <div class="row">
                 <div class="col-md-1"></div>
                 <div class="col-md-5">
+                    <%  if (session.videoType == "movie") { %>
                     <p class="yellow">Produced by: <%= movie.credits.crew[0].name %></p>
                     <p class="yellow">Directed by: <%= movie.credits.crew[1].name %></p>
+                    <%  } %>
                     <p class="yellow">Staring :</p>
                     <ul class="yellow">
-                    <%  for (var i = 0; i < 5; i++) { %>
+                    <%  for (var i = 0; i < 5; i++) {
+                            if (movie.credits.cast[i]) {%>
                         <li class="yellow"><%= movie.credits.cast[i].name %></li>
-                    <%  } %>
+                    <%      }
+                        } %>
                     </ul>
                 </div>
                 <div class="col-md-1"></div>
                 <div class="col-md-5">
                     <p class="yellow">Running time: <%= movie.runtime %> minutes</p>
-                    <p class="yellow">Langage: <%= movie.spoken_languages[0].name%></p>
+                    <p class="yellow">Originale language: <%= movie.original_language %></p>
+                    <%  if (session.videoType == "movie") { %>
+                    <p class="yellow">Spoken languages: <%= movie.spoken_languages[0].name%></p>
+                    <%  } %>
                     <p class="yellow">IMDb rating: <%= movie.vote_average %></p>
                 </div>
             </div>
@@ -46,23 +66,126 @@
             <div class="row">
                 <div class="col-md-5"></div>
                 <div class="col-md-2">
-                    <button class="btn btn-default">Start Movie</button>
+                    <button id="startMovie" type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Start Movie</button>
+                    <div class="modal fade" id="myModal" role="dialog">
+                        <div class="container" style="margin-top: 200px;">
+                            <video id="video" controls src=""></video>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-5"></div>
             </div>
             <br>
         </div>
     </div>
+    <%  if (comments) { %>
     <div class="row">
         <div class="col-md-3"></div>
-        <div class="col-md-6" style="border: red solid 1px;">
-            <p>comments</p>
-            <form>
-                <input class="form-control" type="text"  name="comment" placeholder="Comment here ...">
+        <div class="col-md-6">
+            <h4 class="well">Comments</h4>
+            <div id="allComments" class="container">
+                <%  comments.forEach(function (comment) { %>
+                        <p><strong><a href="/users/<%= comment.authorId.toString() %>"><%= comment.authorName %></a>: </strong><%= comment.text %></p>
+                <%  })%>
+            </div>
+            <form id="commentForm">
+                <input id="bilip" class="form-control" type="text"  name="comment" placeholder="Comment here ...">
+                <button type="submit">Send</button>
             </form>
         </div>
         <div class="col-md-3"></div>
     </div>
+    <%  } %>
 </div>
+<div id="request" value="<%= title %>" class="hidden"></div>
+<div style="height: 500px;"></div>
+
+<script>
+    var title = document.getElementById("request");
+    var startButton = document.getElementById("startMovie");
+    var movieId = document.getElementById("movieId");
+    var movieName = document.getElementById("movieName");
+    var video = document.getElementById("video");
+    var magnet = "";
+    var modal = document.getElementById("myModal");
+    var titleSearch = $(title).attr('value');
+    var commentForm = document.getElementById("commentForm");
+    var allComments = document.getElementById("allComments");
+    var like = document.getElementById("like");
+
+    var index = titleSearch.indexOf(":");
+    if (index > -1){
+        titleSearch = titleSearch.slice(0, index) + titleSearch.slice(index + 1, titleSearch.length);
+    }
+
+    $.post(
+            "/streaming/getMagnet",
+            {
+                titleSearch: titleSearch
+            },
+            function checkMagnet(data) {
+                magnet = data;
+            }
+    )
+
+    $(startButton).click(function () {
+        if (magnet) {
+            $.post(
+                    "/streaming/" + $(movieId).attr('value') + "/download",
+                    {
+                        magnet: magnet,
+                        movieId: $(movieId).attr('value'),
+                        movieName: $(movieName).attr('value')
+                    },
+                    function startMovie(data) {
+                        if (data) {
+                            $(video).attr('src', "/video/" + data);
+                            $(video).attr('autoplay', '');
+                        }
+                    }
+            )
+        }
+        else{
+            $(video).remove();
+            $(modal).append("<div class='container alert alert-warning'>" +
+                    "<strong>This movie can't be played:</strong><br> Sorry, we currently have no torrent for that movie. Please try later." +
+                    "</div>");
+        }
+    })
+
+    $(commentForm).submit(function () {
+        $.post(
+                "/streaming/comments",
+                {
+                    comment: $("input:first").val(),
+                    movieId: $(movieId).attr('value')
+                },
+                function addComment(data) {
+                }
+        )
+    })
+
+    $(like).click(function () {
+        $.post(
+                "/streaming/like",
+                {
+                    movieId: $(movieId).attr('value'),
+                    movieName: $(movieName).attr('value')
+                },
+                function addFavorite(data){
+                    if (data == "success") {
+                        if ($(like).attr('class') == "glyphicon glyphicon-star-empty") {
+                            $(like).attr('class', 'glyphicon glyphicon-star');
+                            $(like).attr('style', 'color: #FFD700; font-size: 25px;');
+                        }
+                        else {
+                            $(like).attr('class', 'glyphicon glyphicon-star-empty');
+                            $(like).attr('style', 'color: grey; font-size: 25px;');
+                        }
+                    }
+                }
+        )
+    })
+</script>
 
 <% include ./partials/footer.ejs %>

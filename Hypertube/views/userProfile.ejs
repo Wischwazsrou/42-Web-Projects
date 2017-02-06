@@ -39,15 +39,15 @@
                 </div>
                 <div>
                     <h4 class="well">About</h4>
-                    <p><%= user.about %></p>
+                    <p class="container"><%= user.about %></p>
                 </div>
                 <div>
                     <h4 class="well">Favorite Movies</h4>
-                    <ul>
+                    <div class="container">
                         <% user.favoriteMovies.forEach(function (movie) { %>
-                        <li><%= movie %></li>
+                            <a href="/streaming/<%= movie.id %>" class="label label-default"><%= movie.title %></a>
                         <% });%>
-                    </ul>
+                    </div>
                 </div>
             </div>
             <div class="col-md-1"></div>

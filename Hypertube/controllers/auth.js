@@ -245,8 +245,16 @@ app.get("/error", function (req, res) {
 });
 
 app.get("/init", function (req, res) {
-    req.session.videoType = "movie";
-    req.session.search = "";
+    req.session.moviesWatched = req.user.moviesWatched;
+    req.session.pagination = {
+        movies: [],
+        genres: [],
+        currentPage: 1,
+        totalPages: 0,
+        category: "home",
+        index: 0,
+        moreInfo: ""
+    };
     res.redirect("/library");
 });
 

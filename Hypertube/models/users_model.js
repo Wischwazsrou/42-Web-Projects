@@ -130,9 +130,9 @@ module.exports = {
                     firstName: firstName,
                     lastName: lastName
                 }
-            }, function (err) {
-                if (err)
-                    console.log(err);
+            },  function (err) {
+                    if (err)
+                        console.log(err);
             })
     },
     updateUserWithfb: function (id, profile, token) {
@@ -144,9 +144,9 @@ module.exports = {
                         token   : token
                     }
                 }
-            }, function (err) {
-                if (err)
-                    console.log(err);
+            },  function (err) {
+                    if (err)
+                        console.log(err);
             })
     },
     updateUserWithGoogle: function (id, profile, token) {
@@ -158,9 +158,9 @@ module.exports = {
                         token   : token
                     }
                 }
-            }, function (err) {
-                if (err)
-                    console.log(err);
+            },  function (err) {
+                    if (err)
+                        console.log(err);
             })
     },
     updateUserWith42: function (id, profile, token) {
@@ -172,9 +172,31 @@ module.exports = {
                         token   : token
                     }
                 }
-            }, function (err) {
-                if (err)
-                    console.log(err);
+            },  function (err) {
+                    if (err)
+                        console.log(err);
+            })
+    },
+    updateMovieWatched: function (id, moviesWatched) {
+        User.findOneAndUpdate({_id: mongoose.Types.ObjectId(id)},
+            {
+                $set: {
+                    moviesWatched: moviesWatched
+                }
+            },  function (err) {
+                    if (err)
+                        console.log(err);
+            })
+    },
+    updateFavoriteMovies: function (id, favortieMovies) {
+        User.findOneAndUpdate({_id: mongoose.Types.ObjectId(id)},
+            {
+                $set: {
+                    favoriteMovies: favoriteMovies
+                }
+            },  function (err) {
+                    if (err)
+                        console.log(err);
             })
     }
 };
